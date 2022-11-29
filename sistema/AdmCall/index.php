@@ -141,11 +141,9 @@ $menCanNombre = mysqli_query($conServicios, "SELECT Matricula, NomApe FROM profe
                             </div>
                     </div>                    
                 </div>                   
-            
-                <br><br>
             <!–– Fin Principal -->
             
-        <div class="card">
+        <div class="container mb-3">
         <br><br>
             <div class="justify-content-center align-items-center" id='misTurnos'>
                             
@@ -227,10 +225,10 @@ $menCanNombre = mysqli_query($conServicios, "SELECT Matricula, NomApe FROM profe
 
 <!-- Modal info doc -->
 <div class="modal fade" id="masInfo" tabindex="-1" aria-labelledby="masInfoLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="masInfoLabel">Info Doctor</h5>
+            <h5 class="modal-title" id="masInfoLabel">Información Doctor</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -247,8 +245,7 @@ $menCanNombre = mysqli_query($conServicios, "SELECT Matricula, NomApe FROM profe
 
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
-            <button type="button" class="btn btn-primary">REPORTE</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>            
         </div>
         </div>
     </div>
@@ -362,7 +359,7 @@ $menCanNombre = mysqli_query($conServicios, "SELECT Matricula, NomApe FROM profe
                     
                         <div class="col-md-auto">
                             <select class="js-select-ObraSocialAgregar custom-select" name="ObraSocialAgregar" id="ObraSocialAgregar">
-                                <option value="00">ㅤㅤㅤㅤㅤTODOSㅤㅤㅤㅤㅤ</option>
+                                <option value="00">ㅤㅤㅤㅤㅤObra Socialesㅤㅤㅤㅤㅤ</option>
                                 <?php  $menObraSocia = mysqli_query($conServicios, "SELECT * FROM obrasocial");
                                     while($row=mysqli_fetch_array($menObraSocia)) {
                                 ?>
@@ -404,7 +401,7 @@ $menCanNombre = mysqli_query($conServicios, "SELECT Matricula, NomApe FROM profe
                     
                         <div class="col-md-auto">
                             <select class="js-select-Estudios custom-select" name="EstudiosAgregar" id="EstudiosAgregar">
-                                <option value="00">ㅤㅤㅤㅤㅤTODOSㅤㅤㅤㅤㅤ</option>
+                                <option value="00">ㅤㅤㅤㅤㅤEstudiosㅤㅤㅤㅤㅤ</option>
                                 <?php  $menEstudios2 = mysqli_query($conServicios, "SELECT * FROM estudios");
                                     while($row=mysqli_fetch_array($menEstudios2)) {
                                 ?>

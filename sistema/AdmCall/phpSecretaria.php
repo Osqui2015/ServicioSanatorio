@@ -38,24 +38,18 @@ if(isset($_POST['fbuscar'])){
                                 <p class="card-text"> '.utf8_encode($datos['HorarioAtencion']).' </p>                                
                                 <p class="card-text"><small class="text-muted">Teléfono: '.utf8_encode($datos['Telefono']).' </small></p>
                                 <p class="card-text"><small class="text-muted">Email: </small></p>
-                                <label for="exampleFormControlTextarea1">Example textarea</label>
+                                <label for="exampleFormControlTextarea1"> Observaciones </label>
                                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly > '.utf8_encode($datos['Obs']).' </textarea>';
 
                     } 
-
+ 
                         
                     $salida.='</div>
                 </div>
                 
             </div>
         </div>
-        <br><br>
-        <div>
-            <div class="form-group">
-                
-            </div>
-        </div>
-        <br><br>';
+        <br>';
         
 
        
@@ -66,11 +60,11 @@ if(isset($_POST['fbuscar'])){
                 <tr>
                     <th > ID </th>
                     <th > Obra Social </th>
-                    <th > Tipo </th>
+                    <th > Plan </th>                    
                     <th > Costo </th>
+                    <th > Tipo </th>
                     <th > Estudio </th>
                     <th > Costo Estudio</th>
-                    <th > Estado </th>
                     <th > Editar </th>
                     <th > Quitar </th>
                          

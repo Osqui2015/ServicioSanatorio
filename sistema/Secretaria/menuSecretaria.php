@@ -6,7 +6,7 @@
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active"><a href="index.php" class="nav-link">Inicio</a></li>
       <li class="nav-item active"><a class="nav-link">ㅤㅤ</a></li>
-      <li blank class="nav-item active"><a href="https://wcentrix.net/pub/chat_test?c=431450e8a67645c3bf582b82e924bb48" class="nav-link">Reporte Novedades</a></li>
+      <li blank class="nav-item active"><a target="_blank" href="https://wcentrix.net/pub/chat_test?c=431450e8a67645c3bf582b82e924bb48" class="nav-link">Reporte Novedades</a></li>
       <li class="nav-item active"><a class="nav-link">ㅤㅤ</a></li>
       <li class="nav-item dropdown active">
             <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Perfil</a>

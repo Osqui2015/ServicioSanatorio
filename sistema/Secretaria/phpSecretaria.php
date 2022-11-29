@@ -22,9 +22,7 @@ if(isset($_POST['fbuscar'])){
                                 <p class="card-text"> Particular: '.utf8_encode($datos['Particular']).' </p>
                                 <p class="card-text"><small class="text-muted">Teléfono: </small></p>
                                 <p class="card-text"><small class="text-muted">Email: </small></p>';
-                    } 
-
-                        
+                    }
                     $salida.='</div>
                 </div>
             </div>
@@ -51,12 +49,11 @@ if(isset($_POST['fbuscar'])){
                                 <td>'.$fila['Plus'].'</td>
                             </tr>';
                 } 
-                
             $salida.='</tbody>
                     </table> 
                 </div>
                 
-                <script type="text/javascript">
+            <script type="text/javascript">
                 $(document).ready(function() {
                     $("#example").DataTable({ 
                         "language": {
@@ -429,34 +426,25 @@ if(isset($_POST['fbuscarMedico'])){
 
                 </div>
                 </div>
-                <br><br>
-                <div>
-                <div class="form-group">
-
-                </div>
-                </div>
-                <br><br>';
+                <br>';
 
 
 
 
         $salida .= '<div class="table-responsive">
         <table class="display compact table table-condensed table-striped table-bordered table-hover" id="example">
-        <thead>
-        <tr>
-        <th > ID </th>
-        <th > Obra Social </th>
-        <th > Tipo </th>
-        <th > Costo </th>
-        <th > Estudio </th>
-        <th > Costo Estudio</th>
-        <th > Estado </th>
+            <thead>
+                <tr>
+                <th > ID </th>
+                <th > Obra Social </th>
+                <th > Plan </th>
+                <th > Costo </th>
+                <th > Tipo </th>
+                <th > Estudio </th>
+                <th > Costo Estudio</th>
 
-        </tr>
-        </thead>
-
-
-
+                </tr>
+            </thead>
     <tbody>';
 
     while($fila = $turnTabla->fetch_assoc()){
