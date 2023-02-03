@@ -56,9 +56,6 @@ function select(){
             }
         })
     }
-    
-    
-
 }
 
 function BorrarFiltro() {
