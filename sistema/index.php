@@ -14,16 +14,26 @@
         header('location: Mucamas');
     }else if($_SESSION['Sector'] == 7){
         header('location: Camilleros');
+    }else if($_SESSION['Sector'] == 8){
+        header('location: Enfermeria');
+    }else if($_SESSION['Sector'] == 9){
+        header('location: mantenimiento');
+    }else if($_SESSION['Sector'] == 10){
+        header('location: Admin');
     }else{
         header('location: ../');
     }
 ?>
 
 
-// 1 AdministradorCallCenter
-// 2 AdministradorHoteleria
-// 3 ConctactCenter
+// 1 Administrador CallCenter
+// 2 Administrador Hoteleria
+// 3 Conctact Center
 // 4 Internacion
 // 5 Secretaria
 // 6 Mucamas
 // 7 Camilleros
+// 8 Administrador Secretaria
+// 9 Mantenimiento
+// 10 Admin
+// 11 Cocina

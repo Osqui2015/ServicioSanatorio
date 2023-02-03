@@ -5,12 +5,6 @@
   require_once "../../conServicios.php";
   $userr = $_SESSION['NombreApe']; /*VALOR USUARIO*/
   
-  if(!isset($_SESSION['active'])){
-    echo "<script>
-    alert ('Debe iniciar sesión para acceder a esta página');
-    window.location = '../../login.php';
-    </script>";
-  }
 
 
   $infoCard = mysqli_query($conServicios, "SELECT * FROM estados WHERE id = 1;");
@@ -51,10 +45,10 @@
     <title>Hoteleria Adm</title>
   </head>
   <body >
-    <?php  include_once "menuHoteleria.php" ?>
+    <?php  include_once "menuAdmin.php" ?>
     <br><br><br>  
       <div class="container">
-        <br>
+        <br> 
         <div class="row justify-content-md-center">
           <div class="col-md-auto mt-3 mb-3">
               <button type="button" class="btn btn-info" onclick="btnPiso(2)"> Piso Nº 2</button>

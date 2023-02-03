@@ -25,116 +25,122 @@ if(isset($_POST['fbuscar'])){
 
         $docInfo = mysqli_query($conServicios,"SELECT * FROM profesional WHERE Matricula = $matricula;");
 
-            
 
-        $salida = <<<HTML
-        <div class="card mb-3" style="max-width: 500px;">
+            $salida = '<div class="card mb-3" style="max-width: 500px;">
             <div class="row no-gutters">            
                 <div class="col">
-                    <div class="card-body"> 
-        HTML;
-                        while($datos = $docInfo->fetch_assoc()){
-                            $salida .= <<<HTML
-                                        <h5 class="card-title">{$datos['NomApe']}</h5>
-                                        <p class="card-text"><small class="text-muted">{$datos['Especialidad']}</small></p>
-                                        <p class="card-text"> {$datos['Consultorio']} </p>
-                                        <p class="card-text"> {$datos['HorarioAtencion']}</p>
-                                        <p class="card-text"><small class="text-muted">Teléfono: {$datos['Telefono']} </small></p>
-                                        <p class="card-text"><small class="text-muted">Email: {$datos['Email']} </small></p>
-                                        <label for="exampleFormControlTextarea1"> Observaciones </label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled> {$datos['Obs']} </textarea>
-                                        HTML;
-    
-                        }   
-                        $salida.=<<<HTML
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-                <br>
-                HTML;
+                    <div class="card-body">';
+                    while($datos = $docInfo->fetch_assoc()){
+                        $salida.=
+                                '<h5 class="card-title">'.utf8_encode($datos['NomApe']).'</h5>
+                                <p class="card-text"><small class="text-muted">'.utf8_encode($datos['Especialidad']).'</small></p>
+                                <p class="card-text"> '.utf8_encode($datos['Consultorio']).' </p>
+                                <p class="card-text"> '.utf8_encode($datos['HorarioAtencion']).' </p>                                
+                                <p class="card-text"><small class="text-muted">Teléfono: '.utf8_encode($datos['Telefono']).' </small></p>
+                                <p class="card-text"><small class="text-muted">Email: </small></p>
+                                <label for="exampleFormControlTextarea1"> Observaciones </label>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly > '.utf8_encode($datos['Obs']).' </textarea>';
 
+                    } 
+ 
+                        
+                    $salida.='</div>
+                </div>
+                
+            </div>
+        </div>
+        <br>';
+        
 
        
 
-        $salida .= <<<HTML
-        <div class="table-responsive">
-            <table class="display compact table table-condensed table-striped table-bordered table-hover" id="example">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Obra Social</th>
-                        <th>Tipo</th>
-                        <th>Costo</th>
-                        <th>Estudio</th>
-                        <th>Costo Estudio</th>
-                        <th>Estado</th>
-                        <th>Editar</th>
-                        <th>Quitar</th>
-                    </tr>
-                </thead>
-                <tbody>
-        HTML;
-        
-        while ($fila = $turnTabla->fetch_assoc()) {
-            $salida .= <<<HTML
+    $salida .= '<div class="table-responsive">
+        <table class="display compact table table-condensed table-striped table-bordered table-hover" id="example">
+            <thead>
                 <tr>
-                    <td>{$fila['id']}</td>
-                    <td>{$fila['nombre']}</td>
-                    <td>{$fila['plan']}</td>
-                    <td>{$fila['Costo']}</td>
-                    <td>{$fila['Tipo']}</td>
-                    <td>{$fila['Estudios']}</td>
-                    <td>{$fila['CostoEstudio']}</td>
-                    <td>
-                        <button type="button" class="btn btn-warning" onclick="EditarOBS({$fila['id']})" data-toggle="modal" data-target="#editarCostoOBS">Editar</button>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-danger" onclick="BorrarOBS({$fila['id']})">Borrar</button>
-                    </td>
+                    <th > ID </th>
+                    <th > Obra Social </th>
+                    <th > Plan </th>                    
+                    <th > Costo </th>
+                    <th > Tipo </th>
+                    <th > Estudio </th>
+                    <th > Costo Estudio</th>
+                    <th > Editar </th>
+                    <th > Quitar </th>
+                         
                 </tr>
-        HTML;
-        }
+            </thead>
+       
+            
         
-        $salida .= <<<HTML
-                </tbody>
-            </table>
-        </div>
-        
-        <script type="text/javascript">
-        $(document).ready(function() {
-            $("#example").DataTable({
-                "language": {
-                    "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
-                },
-                fixedHeader: {
-                    header: true,
-                footer: true
-            },
-            dom: "Bfrtip",
-            buttons: [
-                {
-                    extend: "excelHtml5",
-                    text: "Exportar a Excel",
-                    titleAttr: "Exportar a Excel",
-                    title: "Título del documento",                    
-                },
-                {
-                    extend: "pdfHtml5",
-                    text: "Exportar a PDF",
-                    titleAttr: "Exportar a PDF",
-                    title: "Título del documento",                    
-                }
-            ],
-            initComplete: function(settings, json) {
-                $("#example").wrap("<div style='overflow:auto; width:100%;height:100%;'></div>");
-            }
-        });
-        });
-        </script>
-        HTML;
-    
+            <tbody>';
+
+        while($fila = $turnTabla->fetch_assoc()){
+                    $salida.= '<td>'.utf8_encode($fila['id']).'</td> 
+                                <td>'.utf8_encode($fila['nombre']).'</td> 
+                                <td>'.utf8_encode($fila['plan']).'</td> 
+                                <td>'.utf8_encode($fila['Costo']).'</td> 
+
+                                <td>'.utf8_encode($fila['Tipo']).'</td>            
+                                <td>'.utf8_encode($fila['Estudios']).'</td>
+
+                                <td>'.utf8_encode($fila['CostoEstudio']).'</td>
+
+                                <td> <button type="button" class="btn btn-warning" onclick="EditarOBS('.utf8_encode($fila['id']).')" data-toggle="modal" data-target="#editarCostoOBS" > Editar </button> </td>
+                                <td> <button type="button" class="btn btn-danger" onclick="BorrarOBS('.utf8_encode($fila['id']).')"> Borrar </button> </td>
+                            </tr>';
+                } 
+                
+            $salida.='</tbody>
+                    </table> 
+                </div>
+                
+                <script type="text/javascript">
+                $(document).ready(function() {
+                    $("#example").DataTable({ 
+                        "language": {
+                        "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
+                        },
+                        fixedHeader: {
+                            header: true,
+                            footer: true,
+                        },
+                        dom: "Bfrtip",
+                        buttons:[ 
+                            {
+                                    extend:    "excelHtml5",
+                                    text:      "Exportar a Excel",
+                                    titleAttr: "Exportar a Excel",
+                                    title:     "Título del documento",
+                                    exportOptions: {
+                                        columns: [2,3,4,5,6,7]
+                                    }
+                            },
+                            {
+                                    extend:    "pdfHtml5",
+                                    text:      "Exportar a PDF",
+                                    titleAttr: "Exportar a PDF",
+                                    className: "btn btn-danger",
+                                    title:     "Título del documento",
+                                    exportOptions: {
+                                        columns: [2,3,4,5,6,7]
+                                    }                    
+                            },
+                            {
+                                    extend:    "print",
+                                    text:      "Imprimir",
+                                    titleAttr: "Imprimir",
+                                    className: "btn btn-info",
+                                    exportOptions: {
+                                        columns: [2,3,4,5,6,7]
+                                    }
+      
+                            }
+                        ],                        
+                        ordering: true                        
+                    });
+                });
+            </script>';
         echo $salida;
     
 }
@@ -222,14 +228,13 @@ if(isset($_POST['Tabla'])){
         <table class="display compact table table-condensed table-striped table-bordered table-hover" id="EspecialidadTabla">
             <thead>
                 <tr>
-                    <th > Doctor </th>
-                    <th > Especialidad </th>
                     <th > Obra Social </th>
                     <th > Plan </th>
                     <th > Costo </th>
                     <th > Tipo</th>
                     <th > Matricula </th>
-                    
+                    <th > Doctor </th>
+                    <th > Especialidad </th>
                     <th > Mas Info </th>                    
                 </tr>
             </thead>
@@ -240,14 +245,13 @@ if(isset($_POST['Tabla'])){
         while($ObraS = $infoObraSocial->fetch_assoc()){
                     $salida.=
                             '<tr>
-                                <td>'.utf8_encode($ObraS['NomApe']).'</td>
-                                <td>'.utf8_encode($ObraS['Especialidad']).'</td>
                                 <td>'.utf8_encode($ObraS['Nombre']).'</td>
                                 <td>'.utf8_encode($ObraS['Plan']).'</td>
                                 <td>'.utf8_encode($ObraS['Costo']).'</td>
                                 <td>'.utf8_encode($ObraS['Tipo']).'</td>
                                 <td>'.utf8_encode($ObraS['Matricula']).'</td>
-                                
+                                <td>'.utf8_encode($ObraS['NomApe']).'</td>
+                                <td>'.utf8_encode($ObraS['Especialidad']).'</td>
                                 
                                 <td>
                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#masInfo" onclick="verinfo('.utf8_encode($ObraS['Matricula']).')">
@@ -278,7 +282,9 @@ if(isset($_POST['Tabla'])){
                                         text:      "Exportar a Excel",
                                         titleAttr: "Exportar a Excel",
                                         title:     "Título del documento",
-                                        
+                                        exportOptions: {
+                                            columns: [0,2,3,4,5,6,7]
+                                        }
                                 },
                                 {
                                         extend:    "pdfHtml5",
@@ -286,14 +292,18 @@ if(isset($_POST['Tabla'])){
                                         titleAttr: "Exportar a PDF",
                                         className: "btn btn-danger",
                                         title:     "Título del documento",
-                                                        
+                                        exportOptions: {
+                                            columns: [0,2,3,4,5,6,7]
+                                        }                    
                                 },
                                 {
                                         extend:    "print",
                                         text:      "Imprimir",
                                         titleAttr: "Imprimir",
                                         className: "btn btn-info",
-                                        
+                                        exportOptions: {
+                                            columns: [0,2,3,4,5,6,7]
+                                        }
         
                                 }
                             ],                        
@@ -360,12 +370,12 @@ if(isset($_POST['EditarOS'])){
     $idOS = $_POST['idOS'];
     $PlanObrasocial = $_POST['PlanObrasocial'];
     $nombreObraSocial = $_POST['nombreObraSocial'];
-    
+    $Habilitado = $_POST['Habilitado'];
 
     $valores = array();
     $valores['existe'] = "1";
 
-    $consulta = "UPDATE obrasocial SET Nombre = '$nombreObraSocial', Plan = '$PlanObrasocial' WHERE id =  $idOS";
+    $consulta = "UPDATE obrasocial SET Estado = $Habilitado, Nombre = '$nombreObraSocial', Plan = '$PlanObrasocial' WHERE id =  $idOS";
 
     $resultadoUno = mysqli_query($conServicios,$consulta);
     if (!$resultadoUno) {
@@ -381,7 +391,7 @@ if(isset($_POST['BorrarOS'])){
     $valores = array();
     $valores['existe'] = "1";
 
-    $consulta = "DELETE FROM obrasocial WHERE id =  $idOS";
+    $consulta = "DELETE FROM obrasocial1 WHERE id =  $idOS";
 
     $resultadoUno = mysqli_query($conServicios,$consulta);
     if (!$resultadoUno) {
@@ -421,113 +431,131 @@ if(isset($_POST['BorrarMedico'])){
 if (isset($_POST['VerObraMedico'])){
 
     $matricula = $_POST['matricula'];
-    $turnTabla = mysqli_query($conServicios, "SELECT obc.id, ob.nombre, ob.plan, obc.Costo, obc.Tipo, es.Estudios, obc.CostoEstudio FROM obrascosto AS obc INNER JOIN profesional AS pr ON pr.Matricula = obc.Matricula INNER JOIN obrasocial AS ob ON obc.ObraSocial = ob.Id LEFT JOIN estudios AS es ON obc.Estudio = es.Id WHERE obc.Matricula = $matricula ORDER BY nombre");
-    
-    $salida = <<<HTML
-    <div class="table-responsive">
+    // echo $matricula;
+
+    $turnTabla = mysqli_query($conServicios,"SELECT obc.id,
+                                                    ob.nombre,
+                                                    ob.plan,
+                                                    obc.Costo,
+                                                    obc.Tipo,
+                                                    es.Estudios,
+                                                    obc.CostoEstudio
+                                                    
+                                                    FROM obrascosto AS obc
+                                                    
+                                                    INNER JOIN profesional AS pr ON pr.Matricula = obc.Matricula
+                                                    
+                                                    INNER JOIN obrasocial AS ob ON obc.ObraSocial = ob.Id
+                                                    
+                                                    LEFT JOIN estudios AS es ON obc.Estudio = es.Id
+                                                    
+                                                    WHERE obc.Matricula = $matricula");
+
+    $salida = '<div class="table-responsive">
         <table class="display compact table table-condensed table-striped table-bordered table-hover" id="example">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Obra Social</th>
-                    <th>Plan</th>
-                    <th>Costo</th>
-                    <th>Tipo Prestador</th>
-                    <th>Estudio</th>
-                    <th>Costo</th>
-                    <th>Editar</th>
-                    <th>Quitar</th>
+                    <th > ID </th>
+                    <th > Obra Social </th>
+                    <th > Tipo </th>
+                    <th > Costo </th>
+                    <th > Estudio </th>
+                    <th > Costo Estudio</th>
+                    <th > Estado </th>
+                    <th > Editar </th>
+                    <th > Quitar </th>
+                         
                 </tr>
             </thead>
-            <tbody>
-    HTML;
-    
-    while ($fila = $turnTabla->fetch_assoc()) {
-        $salida .= <<<HTML
-            <tr>
-                <td>{$fila['id']}</td>
-                <td>{$fila['nombre']}</td>
-                <td>{$fila['plan']}</td>
-                <td>{$fila['Costo']}</td>
-                <td>{$fila['Tipo']}</td>
-                <td>{$fila['Estudios']}</td>
-                <td>{$fila['CostoEstudio']}</td>
-                <td>
-                    <button type="button" class="btn btn-warning" onclick="EditarOBS({$fila['id']})" data-toggle="modal" data-target="#editarCostoOBS">Editar</button>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-danger" onclick="BorrarOBS({$fila['id']})">Borrar</button>
-                </td>
-            </tr>
-    HTML;
-    }
-    
-    $salida .= <<<HTML
-            </tbody>
-        </table>
-    </div>
-    
-    <script type="text/javascript">
-    $(document).ready(function() {
-        $("#example").DataTable({
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
-            },
-            fixedHeader: {
-                header: true,
-            footer: true
-        },
-        dom: "Bfrtip",
-        buttons: [
-            {
-                extend: "excelHtml5",
-                text: "Exportar a Excel",
-                titleAttr: "Exportar a Excel",
-                title: "Título del documento",
-                
-            },
-            {
-                extend: "pdfHtml5",
-                text: "Exportar a PDF",
-                titleAttr: "Exportar a PDF",
-                title: "Título del documento",
-                
-            }
-        ],
-        initComplete: function(settings, json) {
-            $("#example").wrap("<div style='overflow:auto; width:100%;height:100%;'></div>");
-        }
-    });
-    });
-    </script>
-    HTML;
+       
+            
+        
+            <tbody>';
 
-    echo $salida;
+        while($fila = $turnTabla->fetch_assoc()){
+                    $salida.= '<td>'.utf8_encode($fila['id']).'</td> 
+                                <td>'.utf8_encode($fila['nombre']).'</td> 
+                                <td>'.utf8_encode($fila['plan']).'</td> 
+                                <td>'.utf8_encode($fila['Costo']).'</td> 
 
-    
+                                <td>'.utf8_encode($fila['Tipo']).'</td>            
+                                <td>'.utf8_encode($fila['Estudios']).'</td>
+
+                                <td>'.utf8_encode($fila['CostoEstudio']).'</td>
+
+                                <td> <button type="button" class="btn btn-warning" onclick="EditarOBS('.utf8_encode($fila['id']).')" data-toggle="modal" data-target="#editarCostoOBS" > Editar </button> </td>
+                                <td> <button type="button" class="btn btn-danger" onclick="BorrarOBS('.utf8_encode($fila['id']).')"> Borrar </button> </td>
+                            </tr>';
+                } 
+                
+            $salida.='</tbody>
+                    </table> 
+                </div>
+                
+                <script type="text/javascript">
+                $(document).ready(function() {
+                    $("#example").DataTable({ 
+                        "language": {
+                        "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
+                        },
+                        fixedHeader: {
+                            header: true,
+                            footer: true,
+                        },
+                        dom: "Bfrtip",
+                        buttons:[ 
+                            {
+                                    extend:    "excelHtml5",
+                                    text:      "Exportar a Excel",
+                                    titleAttr: "Exportar a Excel",
+                                    title:     "Título del documento",
+                                    exportOptions: {
+                                        columns: [2,3,4,5,6,7]
+                                    }
+                            },
+                            {
+                                    extend:    "pdfHtml5",
+                                    text:      "Exportar a PDF",
+                                    titleAttr: "Exportar a PDF",
+                                    className: "btn btn-danger",
+                                    title:     "Título del documento",
+                                    exportOptions: {
+                                        columns: [2,3,4,5,6,7]
+                                    }                    
+                            },
+                            {
+                                    extend:    "print",
+                                    text:      "Imprimir",
+                                    titleAttr: "Imprimir",
+                                    className: "btn btn-info",
+                                    exportOptions: {
+                                        columns: [2,3,4,5,6,7]
+                                    }
+      
+                            }
+                        ],                        
+                        ordering: true                        
+                    });
+                });
+            </script>';
+        echo $salida;
 
 }
 
 // Agregar OB a medico en Tabla.
 if (isset($_POST["AgregarOBSOC"])){
-
-
+    $Importe = $_POST['Importe'];
+    $OBSocSelect = $_POST['OBSocSelect'];
     $matriculaMedicoAlta = $_POST['matriculaMedicoAlta'];
-
-    $ObraSocialAgregar = $_POST['ObraSocialAgregar'];
-    $ObraSocialImporte = $_POST['ObraSocialImporte'];
-
+    $tipoObraSocial = $_POST['tipoObraSocial'];
     $EstudiosAgregar = $_POST['EstudiosAgregar'];
     $EstudiosImporte = $_POST['EstudiosImporte'];
-    
-    $tipoObraSocial = $_POST['tipoObraSocial'];
-
 
     $valores = array();
     $valores['existe'] = "1";
 
     $consulta = "INSERT INTO obrascosto ( ObraSocial, Matricula, Costo, Tipo, Estado, Estudio, CostoEstudio )
-                    VALUES($ObraSocialAgregar, $matriculaMedicoAlta, $ObraSocialImporte, '$tipoObraSocial', 1, $EstudiosAgregar, $EstudiosImporte )";
+                    VALUES($OBSocSelect, $matriculaMedicoAlta, $Importe, '$tipoObraSocial', 1, $EstudiosAgregar, $EstudiosImporte )";
 
     $resultadoUno = mysqli_query($conServicios,$consulta);
     if (!$resultadoUno) {
@@ -616,12 +644,19 @@ if(isset($_POST['editarMedico'])){
         echo "Error en la inserción Guardar: ".$conServicios->error;
         $valores['existe'] = "0";
     }
-    while($consulta = mysqli_fetch_array($resultados)){
-        $valores['existe'] = "1";
-        foreach($consulta as $key => &$value) {
-            $value = mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
-        }
-        $valores = array_merge($valores, $consulta);
+    while($consulta = mysqli_fetch_array($resultados))
+    {
+        $valores['existe'] = "1";         
+        $valores['Matricula'] = $consulta['Matricula'];
+        $valores['NomApe'] = $consulta['NomApe'];
+        $valores['Especialidad'] = $consulta['Especialidad'];
+        $valores['TipoAtencion'] = $consulta['TipoAtencion'];
+        $valores['Telefono'] = $consulta['Telefono'];
+        $valores['Email'] = $consulta['Email'];
+        $valores['HorarioAtencion'] = $consulta['HorarioAtencion'];
+        $valores['Consultorio'] = $consulta['Consultorio'];
+        $valores['Obs'] = $consulta['Obs'];
+
     }
     
     $valores = JSON_encode($valores,JSON_THROW_ON_ERROR);
@@ -903,7 +938,7 @@ if (isset($_POST['editTraerObsMedico'])){
         $valores['ObraSocial'] = $consulta['ObraSocial'];
         $valores['Matricula'] = $consulta['Matricula'];
         $valores['Costo'] = $consulta['Costo'];
-        $valores['TipoObs'] = $consulta['Tipo'];
+        $valores['Tipo'] = $consulta['Tipo'];
         $valores['Estado'] = $consulta['Estado'];
         $valores['Estudio'] = $consulta['Estudio'];
         $valores['CostoEstudio'] = $consulta['CostoEstudio'];
@@ -919,13 +954,12 @@ if(isset($_POST["GuardarEditarOBS"])){
     $id = $_POST['id'];
     $editarCostoO = $_POST['editarCostoO'];
     $editarCostoE = $_POST['editarCostoE'];
-    $editarCostoT = $_POST['editarCostoT'];
 
 
     $valores = array();
     $valores['existe'] = "1";
 
-    $consulta = "UPDATE obrascosto SET Costo =  $editarCostoO, CostoEstudio = $editarCostoE, Tipo = '$editarCostoT'  WHERE id = $id";
+    $consulta = "UPDATE obrascosto SET Costo =  $editarCostoO, CostoEstudio = $editarCostoE WHERE id = $id";
 
     $resultadoUno = mysqli_query($conServicios,$consulta);
     if (!$resultadoUno) {
@@ -1060,98 +1094,90 @@ if (isset($_POST['addCancelacion'])){
 if (isset($_POST['VerTablaCancelar'])){
 
     $turnTabla = mysqli_query($conServicios,"SELECT cm.Id,
-                                                cm.Matricula,
-                                                pr.NomApe,
-                                                cm.Fecha,
-                                                cm.Obs
-                                                FROM cancelacionmedico AS cm
-                                                INNER JOIN profesional AS pr
-                                                ON cm.Matricula = pr.Matricula
-                                                WHERE cm.Fecha >= CURDATE()
-                                                ORDER BY cm.Fecha");
+                                                    cm.Matricula,
+                                                    pr.NomApe,
+                                                    cm.Fecha,
+                                                    cm.Obs
+                                                    FROM cancelacionmedico AS cm
+                                                    INNER JOIN profesional AS pr
+                                                    ON cm.Matricula = pr.Matricula
+                                                    WHERE Fecha >= '2022-11-15'");
 
-            $salida = '<div class="table-responsive">
-            <table class="display compact table table-condensed table-striped table-bordered table-hover" id="example">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Matricula</th>
-                        <th>Nombre y Apellido</th>
-                        <th>Fecha</th>
-                        <th>Observacion</th>  
-                        <th>Borrar</th>
-                    </tr>
-                </thead>
-                <tbody>';
-            while($fila = $turnTabla->fetch_assoc()){
-                $salida .= '<tr>
-                                <td>'.htmlspecialchars($fila['Id'], ENT_QUOTES, 'UTF-8').'</td> 
-                                <td>'.htmlspecialchars($fila['Matricula'], ENT_QUOTES, 'UTF-8').'</td> 
-                                <td>'.htmlspecialchars($fila['NomApe'], ENT_QUOTES, 'UTF-8').'</td> 
-                                <td>'.htmlspecialchars($fila['Fecha'], ENT_QUOTES, 'UTF-8').'</td>
-                                <td>'.htmlspecialchars($fila['Obs'], ENT_QUOTES, 'UTF-8').'</td>
-                                <td><button type="button" class="btn btn-danger" onclick="Borrar('.$fila['Id'].')">Borrar</button></td>
+    $salida = '<div class="table-responsive">
+        <table class="display compact table table-condensed table-striped table-bordered table-hover" id="example">
+            <thead>
+                <tr>
+                    <th > ID </th>
+                    <th > Matricula </th>
+                    <th > Nombre y Apellido </th>
+                    <th > Fecha </th>
+                    <th > Observacion </th>  
+                </tr>
+            </thead>
+       
+            
+        
+            <tbody>';
+
+        while($fila = $turnTabla->fetch_assoc()){
+                    $salida.= '<td>'.utf8_encode($fila['Id']).'</td> 
+                                <td>'.utf8_encode($fila['Matricula']).'</td> 
+                                <td>'.utf8_encode($fila['NomApe']).'</td> 
+                                <td>'.utf8_encode($fila['Fecha']).'</td>
+                                <td>'.utf8_encode($fila['Obs']).'</td>
                             </tr>';
-            } 
-            $salida .='</tbody>
+                } 
+                
+            $salida.='</tbody>
                     </table> 
                 </div>
-
-
                 
-            <script type="text/javascript">
+                <script type="text/javascript">
                 $(document).ready(function() {
                     $("#example").DataTable({ 
-                      "language": {
+                        "language": {
                         "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
-                      },
-                      fixedHeader: {
-                        header: true,
-                        footer: true
-                      },
-                      dom: "Bfrtip",
-                      buttons: [
-                        {
-                          extend: "excelHtml5",
-                          text: "Exportar a Excel",
-                          titleAttr: "Exportar a Excel",
-                          title: "Título del documento"
                         },
-                        {
-                          extend: "pdfHtml5",
-                          text: "Exportar a PDF",
-                          titleAttr: "Exportar a PDF",
-                          className: "btn btn-danger",
-                          title: "Título del documento"
+                        fixedHeader: {
+                            header: true,
+                            footer: true,
                         },
-                        {
-                          extend: "print",
-                          text: "Imprimir",
-                          titleAttr: "Imprimir",
-                          className: "btn btn-info"
-                        }
-                      ],
-                      ordering: false
+                        dom: "Bfrtip",
+                        buttons:[ 
+                            {
+                                    extend:    "excelHtml5",
+                                    text:      "Exportar a Excel",
+                                    titleAttr: "Exportar a Excel",
+                                    title:     "Título del documento",
+                                    exportOptions: {
+                                        columns: [2,3,4,5,6,7]
+                                    }
+                            },
+                            {
+                                    extend:    "pdfHtml5",
+                                    text:      "Exportar a PDF",
+                                    titleAttr: "Exportar a PDF",
+                                    className: "btn btn-danger",
+                                    title:     "Título del documento",
+                                    exportOptions: {
+                                        columns: [2,3,4,5,6,7]
+                                    }                    
+                            },
+                            {
+                                    extend:    "print",
+                                    text:      "Imprimir",
+                                    titleAttr: "Imprimir",
+                                    className: "btn btn-info",
+                                    exportOptions: {
+                                        columns: [2,3,4,5,6,7]
+                                    }
+      
+                            }
+                        ],                        
+                        ordering: true                        
                     });
-                  });                  
+                });
             </script>';
         echo $salida;
-
-}
-
-if(isset($_POST['deleteCancelacion'])){
-    $idCancelar = $_POST['idCancelar'];
-    $valores = array();
-    $valores['existe'] = "1";
-
-    $consulta = "DELETE FROM cancelacionMedico WHERE id =  $idCancelar";
-
-    $resultadoUno = mysqli_query($conServicios,$consulta);
-    if (!$resultadoUno) {
-        echo "Error en la inserción Guardar: ".$conServicios->error;
-        $valores['existe'] = "0";
-    }
-    $valores = JSON_encode($valores,JSON_THROW_ON_ERROR);
-        echo $valores;
 
 }

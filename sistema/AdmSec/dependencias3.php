@@ -21,14 +21,7 @@
 <link rel="stylesheet" type="text/css" href="../../stylos/Buttons-2.2.3/css/buttons.dataTables.min.css"/>
  
 
-<!-- Incluye la librería CSS de Select2 -->
-<link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.3.3/dist/select2-bootstrap4.min.css" rel="stylesheet" />
 
-<!-- Incluye la librería JavaScript de jQuery -->
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.2/dist/jquery.min.js"></script>
-
-<!-- Incluye la librería JavaScript de Select2 -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
 <script type="text/javascript" src="../../stylos/Bootstrap-4-4.6.0/js/bootstrap.min.js"></script>
 

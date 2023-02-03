@@ -16,7 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
    
     <?php  include_once "dependencias.php" ?>
-    <title>Hoteleria Adm</title>
+    <title>Enfermeria</title>
   </head>
   <body>
     <?php  include_once "menuHoteleria.php" ?>
@@ -89,7 +89,7 @@
   </body>
 </html>
 
-
+ 
 
 <!-- Modal Cambiar Estado -->
 <div class="modal fade" id="cambiarEstado" tabindex="-1" role="dialog" aria-labelledby="cambiarEstadoLabel" aria-hidden="true">
@@ -120,6 +120,66 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
         <button type="button" class="btn btn-primary" onclick="GEstadoH()">Guardar Cambios</button> 
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="datosPaciente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Datos Paciente</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+
+        <div class="col-md">
+          <br>
+          <!--- CAMA-->
+          <label for="staticEmail" class="col-sm-2 col-form-label">CAMA </label>
+          <br>
+          <label for="staticEmail" class="col-sm-2 col-form-label">DNI</label>
+          <div class="col-sm-10">
+             <input class="form-control" type="text"  id="dni" >
+          </div>
+          <label for="staticEmail" class="col-sm-6 col-form-label">Nombre y Apellido</label>
+          <div class="col-sm-10">
+             <input class="form-control" type="text"  id="nomape" >
+          </div>
+          <label for="staticEmail" class="col-sm-6 col-form-label">Telefono</label>
+          <div class="col-sm-10">
+             <input class="form-control" type="text"  id="tel" >
+          </div>
+          <br>
+          <div class="col-md-auto">
+            <form id="form">		
+              <label class="mx-3">
+                <input type="radio" name="Acomp" id="AcompB" value="1" >
+                Acompañante
+              </label>
+              <label class="mx-3">
+                <input type="radio" name="Acomp" id="AcompB" value="0" checked>
+                Paciente
+              </label>
+            </form>
+          </div>
+          <br>
+          <div class="col-sm-10">
+              <button type="button" class="btn btn-info" onclick="AltaP()">Dar de Alta</button>
+          </div>
+          <br><br>
+        </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>

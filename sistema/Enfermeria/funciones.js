@@ -143,3 +143,139 @@ function LimpiarEstado(){
     $("#EstadoSelect").val('');
     $("#Observacion").val('');
 }
+
+function datosPaciente (n){    
+    dni = n ;
+
+    var parametros = {
+        "dniPaciente":1,
+        "dni" : dni
+    }
+    console.log (parametros);   
+    $.ajax({
+        data:  parametros,
+        url:   'phpHotelMuca.php',
+        type: 'POST',
+        beforeSend: function(){}, 
+	
+        error: function( jqXHR, textStatus, errorThrown ) {
+
+            if (jqXHR.status === 0) {
+    
+                alert('Not connect: Verify Network.');
+    
+            } else if (jqXHR.status == 404) {
+    
+                alert('Requested page not found [404]');
+    
+            } else if (jqXHR.status == 500) {
+    
+                alert('Internal Server Error [500].');
+    
+            } else if (textStatus === 'parsererror') {
+    
+                alert('Requested JSON parse failed.');
+    
+            } else if (textStatus === 'timeout') {
+    
+                alert('Time out error.');
+    
+            } else if (textStatus === 'abort') {
+    
+                alert('Ajax request aborted.');
+    
+            } else {
+    
+                alert('Uncaught Error: ' + jqXHR.responseText);
+    
+            }
+    
+            },
+        
+        complete: function(){},
+
+        success:  function (val)
+            {
+               let x = JSON.parse(val);               
+               if (x.existe == '1'){
+                console.log ('ok') 
+                $("#dni").val(x.Dni)
+                $("#nomape").val(x.NomApe)
+                $("#tel").val(x.Tel)
+               }else{
+                alert("error")
+                console.log ('nok')
+               }
+            } 
+    })
+
+
+
+
+}
+
+function AltaP(){
+   dni = $("#dni").val()
+   var parametros = {
+    "AltaPaciente":1,
+    "dni" : dni
+    }
+    console.log (parametros);   
+    $.ajax({
+        data:  parametros,
+        url:   'phpHotelMuca.php',
+        type: 'POST',
+        beforeSend: function(){}, 
+
+        error: function( jqXHR, textStatus, errorThrown ) {
+
+            if (jqXHR.status === 0) {
+
+                alert('Not connect: Verify Network.');
+
+            } else if (jqXHR.status == 404) {
+
+                alert('Requested page not found [404]');
+
+            } else if (jqXHR.status == 500) {
+
+                alert('Internal Server Error [500].');
+
+            } else if (textStatus === 'parsererror') {
+
+                alert('Requested JSON parse failed.');
+
+            } else if (textStatus === 'timeout') {
+
+                alert('Time out error.');
+
+            } else if (textStatus === 'abort') {
+
+                alert('Ajax request aborted.');
+
+            } else {
+
+                alert('Uncaught Error: ' + jqXHR.responseText);
+
+            }
+
+            },
+        
+        complete: function(){},
+
+        success:  function (val)
+            {
+            let x = JSON.parse(val);               
+            if (x.existe == '1'){
+                console.log ('ok') 
+                $("#dni").val(' ')
+                $("#nomape").val(' ')
+                $("#tel").val(' ') 
+            }else{
+                alert("error")
+                console.log ('nok')
+            }
+            } 
+    })
+
+}

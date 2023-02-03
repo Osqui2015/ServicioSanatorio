@@ -1,12 +1,12 @@
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color:#004993;">  
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top h5" style="background-color:#004993;">  
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon">Menu</span>
   </button>
   <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active"><a href="index.php" class="nav-link">Inicio</a></li>
+      <li class="nav-item active"><a href="secretaria.php" class="nav-link">Inicio</a></li>
       <li class="nav-item active"><a class="nav-link">ㅤㅤ</a></li>
-      <li class="nav-item active"><a class="nav-link">ㅤ Documentación ㅤ</a></li>
+      <li class="nav-item active"><a href="https://wcentrix.net/pub/chat_test?c=431450e8a67645c3bf582b82e924bb48" target="_blank" class="nav-link">Reporte Novedades</a></li>
       <li class="nav-item active"><a class="nav-link">ㅤㅤ</a></li>
       <li class="nav-item dropdown active">
             <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Perfil</a>
@@ -17,7 +17,7 @@
       </li>
     </ul>
     <span class="navbar-text">
-      <?php echo $_SESSION['NombreApe'] ?>
+      NOMBRE SECRETARIA
     </span>
   </div>
 </nav>

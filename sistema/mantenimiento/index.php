@@ -4,7 +4,8 @@
 
   require_once "../../conServicios.php";
 
-  $estadoHabitacion = mysqli_query($conServicios, "SELECT * FROM estados");
+  $estadoHabitacion = mysqli_query($conServicios, "SELECT * FROM estados WHERE id IN(1,2,3,8,10);");
+  $checkmantenimiento = mysqli_query($conServicios, "SELECT * FROM mantenimiento");
   $userr = $_SESSION['NombreApe']; /*VALOR USUARIO*/
  
 
@@ -50,7 +51,7 @@
           <input type="text" class="form" id="idpiso" hidden>
         </div>
       </div>
-
+ 
 
     <br><br><br> 
     
@@ -106,7 +107,6 @@
         Habitacion: <input type="text" size="2" class="form-control" id="IdH" readonly >
         <br>
             <select class="form-control" name="EstadoSelect" id="EstadoSelect">
-                <option value="00">TODOS</option>
                     <?php 
                         while($row=mysqli_fetch_array($estadoHabitacion)) {
                     ?>
@@ -115,7 +115,16 @@
             </select>
         <br>
         Observación: 
-                        <textarea class="form-control" id="Observacion" rows="3"></textarea>
+          <div class="form-check">
+              <?php 
+                  while($row=mysqli_fetch_array($checkmantenimiento)) {
+              ?>
+                  <input class="form-check-input get_value" type="checkbox" value="<?php echo utf8_encode($row['tipo'])?>" id="id<?php echo utf8_encode($row['id'])?>" />
+                  <label class="form-check-label" for="id<?php echo utf8_encode($row['id'])?>"><?php echo utf8_encode($row['tipo'])?></label>
+                  <br>
+              <?php }?>
+
+          </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

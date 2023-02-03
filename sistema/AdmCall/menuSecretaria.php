@@ -4,7 +4,7 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active"><a href="secretaria.php" class="nav-link">Inicio</a></li>
+      <li class="nav-item active"><a href="index.php" class="nav-link">Inicio</a></li>
       <li class="nav-item active"><a class="nav-link">ㅤㅤ</a></li>
       <li class="nav-item active"><a href="https://wcentrix.net/pub/chat_test?c=431450e8a67645c3bf582b82e924bb48" target="_blank" class="nav-link">Reporte Novedades</a></li>
       <li class="nav-item active"><a href="usuarios.php" class="nav-link"> Gestión de Usuarios </a></li>

@@ -37,7 +37,7 @@
             <option value="00">Piso</option>
             <?php 
                 while($row=mysqli_fetch_array($menuPiso)) {
-            ?>
+            ?> 
                 <option value="<?php echo utf8_encode($row['Piso'])?>"> <?php echo utf8_encode($row['Piso'])?> </option>
             <?php }?>
           </select>

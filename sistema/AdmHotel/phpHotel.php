@@ -6,90 +6,117 @@
     if (isset($_POST["cargaHab"])){
      $piso = $_POST["piso"];
 
-        $cargaEstadosHab = mysqli_query($conServicios, "SELECT hd.Id,
-                                                                hd.Dni,
-                                                                h.Piso,
-                                                                h.Hab,
-                                                                h.Cama,
-                                                                h.Ocupado,
-                                                                e.Estado,
-                                                                e.Clase,
-                                                                hd.DniDos,
-                                                                hd.IdCamaDos
-                                                                FROM habdesg AS hd
-                                                                
-                                                                INNER JOIN hab AS h
-                                                                ON hd.IdCama = h.Id
-                                                                
-                                                                INNER JOIN estados AS e
-                                                                ON h.Estado = e.Id
-                                                                
-                                                                WHERE h.Piso = $piso");
+        $cargaHab = mysqli_query($conServicios, "SELECT * FROM habitacion WHERE piso = $piso ");
 
         $salida = '<div class="row row-cols-1 row-cols-md-4">';
 
-        while($row=mysqli_fetch_array($cargaEstadosHab)) {
+        while($row=mysqli_fetch_array($cargaHab)) {
+            
+            $hab = $row['Habitaciones'];
+
+                $estadoHabitacion = mysqli_query($conServicios, "SELECT ha.Id,
+                                                                        ha.Piso,
+                                                                        ha.Habitaciones,
+                                                                        ha.Estado,
+                                                                        e.Estado AS Detalle,
+                                                                        e.imgUno,
+                                                                        e.imgDos
+                                                                        FROM habitacion AS ha
+                                                                        
+                                                                        LEFT JOIN estados AS e
+                                                                        ON ha.Estado = e.Id
+                                                                        WHERE ha.habitaciones = $hab");
+
                 $salida .= '<div class="col mb-2">
-                        <div class="card h-80 '.utf8_encode($row['Clase']).'" style="max-width: 15rem;" id = "1">
-                            <div class="card-header">Habitacion '.utf8_encode($row['Hab']).' <br> <p class="font-italic">  </p> </div>
+                        <div class="card h-80 " style="max-width: 15rem;" id = "1">
+                            <div class="card-header">
+                                Habitacion '.utf8_encode($row['Habitaciones']).' 
+                                <button type="button" class="border-0" > <img src="../../imagen/vacio.png" height ="40" width="50" /></button>
+                            </div>
                             <div class="card-body">
                                 <div class="container">
                                     <div class="row">';
 
+                                       // Obtener la información de todos los pacientes de la habitación
+                                        $cargaPac = mysqli_query($conServicios, "SELECT * FROM habconsulta WHERE piso = $piso AND hab = $hab AND estado = 1");
 
+                                        // Crear arreglos para almacenar la información de cada cama
+                                        $camaUno = array();
+                                        $camaDos = array();
 
-                                       /* if ($row['IdTipoHab'] == '1'){
-                                            $salida .= '<div class="col-sm">
-                                                        <button type="button"> <img src="./img/camaHabitacion.svg" height ="40" width="50" /></button>
-                                                    </div>
-                                                    <br>';
+                                        // Iterar sobre los resultados de la consulta
+                                        while($row=mysqli_fetch_array($cargaPac)) {
+                                            // Separar la información en función de la cama
+                                            if ($row['Cama'] == 1) {
+                                                $camaUno[] = $row;
+                                            }
+                                            else {
+                                                $camaDos[] = $row;
+                                            }
                                         }
-                                        if ($row['IdTipoHab'] == '2'){
+
+                                        // Verificar si hay pacientes en la cama 1
+                                        if (count($camaUno) == 0){
                                             $salida .= '<div class="col-sm">
-                                                            <button type="button"> <img src="./img/camaHabitacion.svg" height ="40" width="50" /></button>
+                                                            <button type="button" class="border-0" > <img src="../../imagen/camav.png" height ="40" width="50" /></button>
                                                         </div>
                                                         <br>';
-                                            $salida .= '<div class="col-sm">
-                                                <button type="button"> <img src="./img/camaHabitacion.svg" height ="40" width="50" /></button>
-                                            </div>
-                                            <br>';
-                                        }
-                                        if ($row['IdTipoHab'] == 3){
-                                            $salida .= '<div class="col-sm">                                                    
-                                                            <button type="button"> <img src="./img/suite.svg" height ="40" width="50" /></button>
-                                                        </div>
-                                                        <br>';
-                                        }
-                                        if ($row['IdTipoHab'] == 4){
-                                            $salida .= '<div class="col-sm">
-                                                                <button type="button"> <img src="./img/camaHabitacion.svg" height ="40" width="50" /></button>
+                                        }else {
+                                            foreach ($camaUno as $row) {
+                                                $salida .= '<div class="col-sm">
+                                                                <button type="button" class="border-0" data-toggle="modal" data-target="#datosPaciente" onclick="datosPaciente('.utf8_encode($row['Dni']).')"> <img src="../../imagen/camao.png" height ="40" width="50" /></button>
                                                             </div>
                                                             <br>';
-                                        }   */                                                             
+                                            }
+                                        }
 
-                                    $salida .= '</div>
-                                    <br>
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-sm">
-                                                <button type="button"> <img src="./img/persona.svg" height ="40" width="50" /></button>
+                                        // Verificar si hay pacientes en la cama 2
+                                        if (count($camaDos) == 0){
+                                            $salida .= '<div class="col-sm">
+                                                            <button type="button" class="border-0" > <img src="../../imagen/camav.png" height ="40" width="50" /></button>
+                                                        </div>
+                                                        <br>';
+                                        }else {
+                                            foreach ($camaDos as $row) {
+                                                $salida .= '<div class="col-sm">
+                                                                <button type="button" class="border-0" data-toggle="modal" data-target="#datosPaciente" onclick="datosPaciente('.utf8_encode($row['Dni']).')"> <img src="../../imagen/camao.png" height ="40" width="50" /></button>
+                                                            </div>
+                                                            <br>';
+                                            }
+                                        }
+
+                                        $salida .= '</div>
+                                        <br>
+                                        <div class="row justify-content-center">';                                    
                                             
-                                                <button type="button"> <img src="./img/persona.svg" height ="40" width="50" /></button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
+                                            if (mysqli_num_rows($estadoHabitacion) == 0){
+                                                $salida .= '<div class="col-sm">
+                                                            <button type="button" class="border-0" > <img src="../../imagen/camav.png" height ="40" width="50" /></button>
+                                                        </div>
+                                                        <br>';
+                                            }else {
+                                                while($row=mysqli_fetch_array($estadoHabitacion)) {
+                                                    $salida .= '<div class="col-sm">
+                                                                    <button type="button" class="border-0" > <img src="../../imagen/'.utf8_encode($row['imgUno']).'.png" height ="40" width="50" data-toggle="tooltip" data-placement="top" title="'.utf8_encode($row['imgUno']).'"/></button>
+                                                                </div>
+                                                                <div class="col-sm">
+                                                                    <button type="button" class="border-0" > <img src="../../imagen/'.utf8_encode($row['imgDos']).'.png" height ="40" width="50" data-toggle="tooltip" data-placement="top" title="'.utf8_encode($row['imgDos']).'"/></button>
+                                                                </div>';
+                                                }
+                                            }    
+    
+    
+                                        
+                                            $salida .= '</div>
                                 </div>
                             </div>
-                            <div class="card-footer">
-                                <input type="text" size="2" class="form-control" id="IdPiso" readonly value="'.utf8_encode($row['Piso']).'" hidden>
-                                <button type="button" class="btn btn-outline-light btn-sm" data-toggle="modal" data-target="#cambiarEstado" onclick="IdEstado('.utf8_encode($row['Id']).')" >Cambiar Estado</button>
+                            <div class="card-footer">                                
+                                <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#cambiarEstado" onclick="IdEstado('.$hab.')" >Cambiar Estado</button>
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#detalleHabi">Detalle</button>
                                 <br><br>
                                 <small>
                                     <p class="text-decoration-none">
-                                        Historial de Estado <a href="#" class="text-reset" onclick="HistorialEstado('.utf8_encode($row['Id']).')" data-toggle="modal" data-target="#HistorialEstado">Ultimo Estado</a>.
+                                        Historial de Estado <a href="#" class="text-reset" onclick="HistorialEstado('.$hab.')" data-toggle="modal" data-target="#HistorialEstado">Ultimo Estado</a>.
                                     </p>
                                 </small>
                             </div>                            
@@ -114,12 +141,12 @@
         $valores = array();
         $valores['existe'] = "1";
     
-        $consulta = "UPDATE habestados SET Estado =  $idest WHERE Hab = $idHab;";
+        $consulta = "UPDATE habitacion SET Estado =  $idest WHERE Habitaciones = $idHab;";
 
        // echo $consulta;
 
         $consulta2 = "INSERT INTO historialEstado (Hab, Estado, Fecha, Obs, Usuario)
-        VALUES ($idHab, $idest, '$DateAndTime', '$obs', 'prueba');";
+        VALUES ($idHab, $idest, '$DateAndTime', '$obs', 'prueba')";
     
         $resultadoUno = mysqli_query($conServicios,$consulta);
         $resultadoDos = mysqli_query($conServicios,$consulta2);
@@ -140,22 +167,19 @@
 // historial estado habitacion de la
     if (isset($_POST['cargaHistorialEstado'])){
         $idHab = $_POST['idHab'];
-        $cargaEstadosHab = mysqli_query($conServicios, "SELECT HE.Id,
-                                                        HE.Fecha,
-                                                        H.Habitaciones,
-                                                        E.Estado,
-                                                        HE.Obs,
-                                                        HE.Usuario
-                                                        
-                                                        FROM historialEstado AS HE
-                                                        INNER JOIN habitacion AS H
-                                                        ON HE.Hab = H.Id
-                                                        
-                                                        INNER JOIN estados AS E
-                                                        ON HE.Estado = E.Id
-                                                        
-                                                        WHERE HE.Hab = $idHab
-                                                        ORDER BY HE.Id DESC");
+        $cargaEstadosHab = mysqli_query($conServicios, "SELECT  hi.Id,
+                                                                hi.Fecha,
+                                                                hi.Hab,
+                                                                e.Estado,
+                                                                hi.Obs,
+                                                                hi.Usuario
+                                                                
+                                                                FROM historialestado AS hi
+                                                                
+                                                                LEFT JOIN estados AS e
+                                                                ON hi.Estado = e.Id
+                                                                
+                                                                WHERE hab = $idHab");
         
 
         $salida = '<div class="table-responsive">
@@ -180,7 +204,7 @@
                     $salida.= '<tr>
                                     <td>'.utf8_encode($fila['Id']).'</td>
                                     <td>'.utf8_encode($fila['Fecha']).'</td>            
-                                    <td>'.utf8_encode($fila['Habitaciones']).'</td>
+                                    <td>'.utf8_encode($fila['Hab']).'</td>
                                     <td>'.utf8_encode($fila['Estado']).'</td>
                                     <td>'.utf8_encode($fila['Obs']).'</td>
                                     <td>'.utf8_encode($fila['Usuario']).'</td>                            
@@ -238,31 +262,6 @@
                 });
             </script>';
         echo $salida;                                                  
-    }
-
-// Agregar Habitaciones al Listado.
-    if (isset($_POST['AddHabitacion'])){
-        $habitacion = $_POST['habitacion'];
-        $estado = $_POST['estado'];
-        $tipo = $_POST['tipo'];
-        $valores = array();
-        $valores['existe'] = "1";
-    
-        $consulta2 = "INSERT INTO habestados (Hab, Estado, Tipo, E)
-        VALUES ($habitacion,
-                $estado,
-                $tipo,
-                1);";
-    
-        $resultadoDos = mysqli_query($conServicios,$consulta2);
-
-        if (!$resultadoDos) {
-            echo "Error en la inserción historialEstado: ".$conServicios->error;
-            $valores['existe'] = "0";
-        }
-
-        $valores = JSON_encode($valores,JSON_THROW_ON_ERROR);
-            echo $valores;
     }
 
 
@@ -389,4 +388,33 @@
         $valores = JSON_encode($valores,JSON_THROW_ON_ERROR);
             echo $valores;
     
+    }
+
+// datos paciente
+    if (isset($_POST['dniPaciente'])){
+        $dni = $_POST['dni'];
+        $valores = array();
+        $valores['existe'] = "0";
+    
+        $consulta = "SELECT * FROM paciente WHERE Dni = $dni;";
+    
+        $resultados = mysqli_query($conServicios,$consulta);
+        if (!$resultados) {
+            echo "Error en la inserción Guardar: ".$conServicios->error;
+            $valores['existe'] = "0";
+        }
+        while($consulta = mysqli_fetch_array($resultados))
+        {
+            $valores['existe'] = "1";         
+            $valores['id'] = $consulta['Id'];
+            $valores['Dni'] = $consulta['Dni'];
+            $valores['NomApe'] = $consulta['NomApe'];
+            $valores['Tel'] = $consulta['Tel'];
+            $valores['Tipo'] = $consulta['Tipo'];
+        }
+        
+        $valores = JSON_encode($valores,JSON_THROW_ON_ERROR);
+            echo $valores;
+
+
     }

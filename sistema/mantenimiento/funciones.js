@@ -68,15 +68,22 @@ function GEstadoH(){
     console.log("gEstadosH")
     idHab = $("#IdH").val();
     idest = $("#EstadoSelect").val();
-    obs = $("#Observacion").val()
     user = $("#usuario").val()
+
+    var obs = [];  
+    $('.get_value').each(function(){  
+         if($(this).is(":checked"))  
+         {  
+            obs.push($(this).val());  
+         }  
+    });
 
     var parametros = {
         "editEstadoHab" : 1,
         "idHab": idHab,
         "idest": idest,
         "obs" : obs,
-        "user" : user
+        "user" : user,
     }
     console.log (parametros);
     $.ajax({
@@ -138,7 +145,7 @@ function GEstadoH(){
             } 
     }) 
 }
-
+ 
 function LimpiarEstado(){
     $("#EstadoSelect").val('');
     $("#Observacion").val('');

@@ -153,16 +153,22 @@
     if (isset($_POST['pisoSelect'])){
         $piso = $_POST['piso'];
 
+        $cargaHab = mysqli_query($conServicios, "SELECT h.Piso, cama.Habitacion, cama.Cama, cama.Estado
 
-        $cargaHab = mysqli_query($conServicios, "SELECT * FROM habitacion WHERE Piso = $piso");
-
-
+                                                    FROM habcamas AS cama
+                                                    
+                                                    LEFT JOIN habitacion AS h
+                                                    ON h.Habitaciones = cama.Habitacion
+                                                    
+                                                    WHERE h.Piso = $piso
+                                                    
+                                                    GROUP BY cama.Habitacion");
 
         $salida = '
             <select class="form-control" id="idHabitacion" onchange="selecHabitacion()">
                 <option>Habitacion</option>';
                 while($row=mysqli_fetch_array($cargaHab)) {
-                    $salida.= '<option value='.utf8_encode($row['Habitaciones']).'>'.utf8_encode($row['Habitaciones']).'</option>';
+                    $salida.= '<option value='.utf8_encode($row['Habitacion']).'>'.utf8_encode($row['Habitacion']).'</option>';
                 };
 
             $salida.= '</select>';
@@ -174,51 +180,60 @@
     if (isset($_POST['habSelect'])){
         $hab = $_POST['hab'];
         
+        
         $valores = array();
         $valores['existe'] = "1";
 
-        $consulta = "SELECT Fin.id, Fin.piso, Fin.Habitaciones, Fin.CamaA, hc.Dni AS DniA, pa.NomApe AS nomA, pa.Tel AS telA, Fin.CamaB, ht.Dni AS DniB, pb.NomApe AS nomB, pb.Tel AS telB
-                            FROM(
-                                SELECT id, piso, Habitaciones, CamaA, (SELECT tc.Cama FROM habcamas AS tc WHERE tc.Habitacion = Con.Habitaciones AND tc.Cama <> Con.CamaA AND tc.Estado = 1) AS CamaB
-                                FROM (
-                                    SELECT ha.id, ha.piso, ha.Habitaciones, (SELECT MIN(hc.Cama) FROM habcamas AS hc WHERE hc.Habitacion = ha.Habitaciones AND hc.Estado = 1) AS CamaA
-                                    FROM habitacion AS ha
-                                ) AS Con
-                            ) AS Fin
-                        LEFT JOIN habconsulta AS hc ON hc.Hab = Fin.Habitaciones AND hc.Cama = CamaA
-                        LEFT JOIN habconsulta AS ht ON ht.Hab = Fin.Habitaciones AND ht.Cama = CamaB
-                        INNER JOIN paciente AS pa ON hc.Dni = pa.Dni 
-                        INNER JOIN paciente AS pb ON ht.Dni = pb.Dni 
-                        
-                        WHERE Fin.Habitaciones = $hab
-                        
-                        ORDER BY Fin.piso, Fin.Habitaciones, Fin.CamaA";
+        // CAMA A
+        $consultaUNO = "SELECT p.Dni, p.NomApe, p.Tel, p.Tipo
 
-        $resultado = mysqli_query($conServicios,$consulta);
+                        FROM habconsulta AS hc
+                        
+                        INNER JOIN paciente AS p
+                        ON p.Dni = hc.Dni
+                        
+                        WHERE hab = $hab AND estado = 1 AND cama = 1";
+
+
+        $resultado = mysqli_query($conServicios,$consultaUNO);
             if (!$resultado) {
                 echo "Error en la resultado Guardar: ".$conServicios->error;
                 $valores['existe'] = "0";
             }
            
 
-        while($consulta = mysqli_fetch_array($resultado))
-        {
-            $valores['existe'] = "1";         
-            $valores['id'] = $consulta['id'];
-            $valores['piso'] = $consulta['piso'];
-            $valores['Habitaciones'] = $consulta['Habitaciones'];
-            $valores['CamaA'] = $consulta['CamaA'];
-            $valores['DniA'] = $consulta['DniA'];
-            $valores['CamaB'] = $consulta['CamaB'];
-            $valores['DniB'] = $consulta['DniB'];
-            $valores['nomA'] = $consulta['nomA'];
-            $valores['nomB'] = $consulta['nomB'];
-            $valores['telA'] = $consulta['telA'];
-            $valores['telB'] = $consulta['telB'];
-            
+        while($consultaU = mysqli_fetch_array($resultado))
+        {        
+            $valores['DniA'] = $consultaU['Dni'];
+            $valores['nomA'] = $consultaU['NomApe'];
+            $valores['telA'] = $consultaU['Tel'];
+            $valores['tipoA'] = $consultaU['Tipo'];
+        }
+
+        // CAMA b
+        $consultaDos = "SELECT p.Dni, p.NomApe, p.Tel, p.Tipo
+
+        FROM habconsulta AS hc
+
+        INNER JOIN paciente AS p
+        ON p.Dni = hc.Dni
+
+        WHERE hab = $hab AND estado = 1 AND cama = 2";
+
+        $resultadoD = mysqli_query($conServicios,$consultaDos);
+        if (!$resultadoD) {
+        echo "Error en la resultado Guardar: ".$conServicios->error;
+        $valores['existe'] = "0";
         }
 
 
+        while($consultaD = mysqli_fetch_array($resultadoD))
+        {        
+        $valores['DniB'] = $consultaD['Dni'];
+        $valores['nomB'] = $consultaD['NomApe'];
+        $valores['telB'] = $consultaD['Tel'];
+        $valores['tipoB'] = $consultaD['Tipo'];
+        }
         $valores = JSON_encode($valores,JSON_THROW_ON_ERROR);
             echo $valores;
         
@@ -255,10 +270,6 @@
             echo "Error en la resultadoDos Guardar: ".$conServicios->error;
             $valores['existe'] = "0";
         }
-
-
-
-
 
         $valores = JSON_encode($valores,JSON_THROW_ON_ERROR);
         echo $valores;

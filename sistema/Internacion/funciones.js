@@ -237,7 +237,7 @@ function ph(){
 
 }
 ////////////////////////////////////////////////////////////////////////
-function pisoSelect(){
+function pisoSelect(){ 
     piso = $("#idPiso").val();
     var parametros = {
         "pisoSelect" : 1,
@@ -349,11 +349,13 @@ function selecHabitacion(){
                if (x.existe === '1'){
                 console.log ('ok hab')
                 $("#dniA").val(x.DniA)
-                $("#dniB").val(x.DniB)
                 $("#nomapeA").val(x.nomA)
+                $("#telB").val(x.telB) 
+                
+                $("#dniB").val(x.DniB)                
                 $("#nomapeB").val(x.nomB)
                 $("#telA").val(x.telA)
-                $("#telB").val(x.telB) 
+                
                }else{
                 alert("error")
                 console.log ('nok')

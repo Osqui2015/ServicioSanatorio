@@ -40,211 +40,22 @@ function select(){
             url:   'phpSecretaria.php',
             type: 'POST',
             success:function(r){
-                
                 $('#misTurnos').html(r)
-                borrar ()
             }
         })
     }
 }
 
-//----------------------------------------------------------------//
-    // botón agregar MEDICO
-    function btnAgregarMedico(){ 
-        borrar();
-        $("#btnAEM").attr("onclick","guardarMedico()");
-
-    }
-
-    // botón EDITAR MEDICO Traer datos
-    function EditarMedico(){
-
-        matricula = $("#Nombre").val();    
-        var parametros = {
-            "editarMedico": "1",
-            "matricula" : matricula     
-        };
-
-        $.ajax({
-            data: parametros,
-            url: 'phpSecretaria.php',
-            type: 'POST',
-            success: function (val) {
-                let x = JSON.parse(val);
-                if (x.existe === '1') {
-                    
-
-                    $("#matriculaMedicoAlta").val(x.Matricula);
-                    $("#NomApe").val(x.NomApe);
-                    $("#Espec").val(x.Especialidad);
-                    $("#Tatencion").val(x.TipoAtencion);
-                    $("#telf").val(x.Telefono);
-                    $("#email").val(x.Email);
-                    $("#Hatencion").val(x.HorarioAtencion);
-                    $("#Consult").val(x.Consultorio);
-                    $("#btnAEM").text("Editar");
-                    $("#btnAEM").attr("onclick","guardarMedicoEdit()");
-                    document.getElementById("obsText").value = x.Obs;
-                    
-                } else {
-                    alert("error");
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                alert('Error: ' + jqXHR.responseText);
-            }
-        });
-
-    }
-
-    // botón BORRAR MÉDICO 
-    function BorrarMedico(){
-        console.log("entre Borrar Medico")
-        matricula = $("#Nombre").val();
-        var parametros = {
-            "BorrarMedico": "1",
-            "matricula" : matricula        
-        };
-        console.log (parametros);   
-        $.ajax({
-            data:  parametros,
-            url:   'phpSecretaria.php',
-            type: 'POST',
-            beforeSend: function(){}, 
-        
-            error: function( jqXHR, textStatus, errorThrown ) {
-
-                if (jqXHR.status === 0) {
-        
-                    alert('Not connect: Verify Network.');
-        
-                } else if (jqXHR.status == 404) {
-        
-                    alert('Requested page not found [404]');
-        
-                } else if (jqXHR.status == 500) {
-        
-                    alert('Internal Server Error [500].');
-        
-                } else if (textStatus === 'parsererror') {
-        
-                    alert('Requested JSON parse failed.');
-        
-                } else if (textStatus === 'timeout') {
-        
-                    alert('Time out error.');
-        
-                } else if (textStatus === 'abort') {
-        
-                    alert('Ajax request aborted.');
-        
-                } else {
-        
-                    alert('Uncaught Error: ' + jqXHR.responseText);
-        
-                }
-        
-                },
-            
-            complete: function(){},
-
-            success:  function (val)
-                {
-                    console.log(val)
-                let x = JSON.parse(val);
-                console.log (x.existe)
-                if (x.existe === '1'){
-                    console.log ('ok')                
-                    alert('BORRADO Correctamente')
-                    $(location).attr('href','index.php');
-                    
-                }else{
-                    alert('No se BORRO Correctamente')
-                    console.log ('nok')
-                }
-                } 
-        })
-    }
-//----------------------------------------------------------------//
-    //  botón AGREGAR obrasocial
-    function AgregarObraSocial(){  
-        document.getElementById('AgregarOB').style.display = 'block';
-        document.getElementById('ModiOB').style.display = 'none';
-    }
-    // botón EDITAR ObraSocial
-    function editarObraSocial(){
-        document.getElementById('AgregarOB').style.display = 'none';
-        document.getElementById('ModiOB').style.display = 'block';
-        idOS = $("#ObraSocial").val();
-        var parametros = {
-            "editarOSocial": "1",
-            "idOS" : idOS     
-        };
-        console.log (parametros);   
-        $.ajax({
-            data:  parametros,
-            url:   'phpSecretaria.php',
-            type: 'POST',
-            beforeSend: function(){}, 
-        
-            error: function( jqXHR, textStatus, errorThrown ) {
-
-                if (jqXHR.status === 0) {
-        
-                    alert('Not connect: Verify Network.');
-        
-                } else if (jqXHR.status == 404) {
-        
-                    alert('Requested page not found [404]');
-        
-                } else if (jqXHR.status == 500) {
-        
-                    alert('Internal Server Error [500].');
-        
-                } else if (textStatus === 'parsererror') {
-        
-                    alert('Requested JSON parse failed.');
-        
-                } else if (textStatus === 'timeout') {
-        
-                    alert('Time out error.');
-        
-                } else if (textStatus === 'abort') {
-        
-                    alert('Ajax request aborted.');
-        
-                } else {
-        
-                    alert('Uncaught Error: ' + jqXHR.responseText);
-        
-                }
-        
-                },
-            
-            complete: function(){},
-
-            success:  function (val)
-                {
-                let x = JSON.parse(val);
-                console.log (val)
-                if (x.existe === '1'){
-                    console.log ('ok')
-                        $("#PlanObrasocial").val(x.Plan)
-                        $("#nombreObraSocial").val(x.Nombre)                    
-                        $('#obraSocial').modal('show')
-                }else{
-                    alert("error")
-                    console.log ('nok')
-                }
-                } 
-        })
-    }
-//----------------------------------------------------------------//
-
-
-
-
-
+// botón agregar MEDICO
+function btnAgregarMedico(){ 
+    document.getElementById('agregarMedico').style.display = 'block';
+    document.getElementById('editMedico').style.display = 'none';
+}
+/// obrasocial botón agregar
+function AgregarObraSocial(){  
+    document.getElementById('AgregarOB').style.display = 'block';
+    document.getElementById('ModiOB').style.display = 'none';
+}
 // guardar Obra Social
 function GuardarObraSocial(){
     nombreObraSocial = $("#nombreObraSocial").val();
@@ -307,9 +118,6 @@ function GuardarObraSocial(){
                if (x.existe === '1'){
                 console.log ('ok')
                 alert('Agregado Correctamente')
-                setTimeout(function(){
-                    $(location).attr('href','index.php');
-                    }, 0);
                 borrarGuardarObraSocial()
                 $('#obraSocial').modal('hide')
                }else{
@@ -322,12 +130,80 @@ function GuardarObraSocial(){
     })
     
 }
+// editar Obra ObraSocial
+function editarObraSocial(){
+    document.getElementById('AgregarOB').style.display = 'none';
+    document.getElementById('ModiOB').style.display = 'block';
+    idOS = $("#ObraSocial").val();
+    var parametros = {
+        "editarOSocial": "1",
+        "idOS" : idOS     
+    };
+    console.log (parametros);   
+    $.ajax({
+        data:  parametros,
+        url:   'phpSecretaria.php',
+        type: 'POST',
+        beforeSend: function(){}, 
+	
+        error: function( jqXHR, textStatus, errorThrown ) {
+
+            if (jqXHR.status === 0) {
+    
+                alert('Not connect: Verify Network.');
+    
+            } else if (jqXHR.status == 404) {
+    
+                alert('Requested page not found [404]');
+    
+            } else if (jqXHR.status == 500) {
+    
+                alert('Internal Server Error [500].');
+    
+            } else if (textStatus === 'parsererror') {
+    
+                alert('Requested JSON parse failed.');
+    
+            } else if (textStatus === 'timeout') {
+    
+                alert('Time out error.');
+    
+            } else if (textStatus === 'abort') {
+    
+                alert('Ajax request aborted.');
+    
+            } else {
+    
+                alert('Uncaught Error: ' + jqXHR.responseText);
+    
+            }
+    
+            },
+        
+        complete: function(){},
+
+        success:  function (val)
+            {
+               let x = JSON.parse(val);
+               console.log (val)
+               if (x.existe === '1'){
+                console.log ('ok')
+                    $("#PlanObrasocial").val(x.Plan)
+                    $("#nombreObraSocial").val(x.Nombre)                    
+                    $('#obraSocial').modal('show')
+               }else{
+                alert("error")
+                console.log ('nok')
+               }
+            } 
+    })
+}
 
 function GuardarObraSocialModi(){
     idOS = $("#ObraSocial").val();
     PlanObrasocial = $("#PlanObrasocial").val();
     nombreObraSocial = $("#nombreObraSocial").val();
-    
+    tipoObraSocial = $("#tipoObraSocial").val();
     
 
     var parametros = {
@@ -335,7 +211,7 @@ function GuardarObraSocialModi(){
         "idOS" : idOS,
         "PlanObrasocial" : PlanObrasocial,
         "nombreObraSocial" : nombreObraSocial,
-               
+        "tipoObraSocial" : tipoObraSocial        
     };
     console.log (parametros);   
     $.ajax({
@@ -387,14 +263,11 @@ function GuardarObraSocialModi(){
                console.log (x.existe)
                if (x.existe === '1'){
                 console.log ('ok')
-                alert('Editado Correctamente')
-                setTimeout(function(){
-                    $(location).attr('href','index.php');
-                    }, 0);
+                alert('Agregado Correctamente')
                 borrarGuardarObraSocial()
                 $('#obraSocial').modal('hide')
                }else{
-                alert('No se Editado Correctamente')
+                alert('No se Agrego Correctamente')
                 console.log ('nok')
                }
             } 
@@ -405,10 +278,9 @@ function borrarGuardarObraSocial(){
     $("#PlanObrasocial").val(' ')
     $("#nombreObraSocial").val(' ')
 }
-
 // ELIMINAR obrasocial
 function BorrarObraSocial(){
-    console.log("BorrarObraSocial")
+    console.log("entre")
     idOS = $("#ObraSocial").val();
     var parametros = {
         "BorrarOS": "1",
@@ -474,7 +346,6 @@ function BorrarObraSocial(){
             } 
     })
 }
-
 // ver obra social de cada medico
 function verObraSocialCarga(){
    matricula = $("#matriculaMedicoAlta").val();
@@ -533,6 +404,8 @@ function verObraSocialCarga(){
     })
 
 }
+// focus
+
 
 // VALIDAR MATRICULAR
 function validarMatricula(){
@@ -619,7 +492,7 @@ function guardarMedico(){
                 alert("OK")
                 borrar ()
                 setTimeout(function(){
-                    $(location).attr('href','index.php');
+                    $(location).attr('href','secretaria.php');
                     }, 0);
                 $('#Agregar').modal('hide')
                    
@@ -629,6 +502,155 @@ function guardarMedico(){
                }
             } 
     })
+}
+
+// BORRAR MÉDICOS BorrarMedico()
+function BorrarMedico(){
+    console.log("entre Borrar Medico")
+    matricula = $("#Nombre").val();
+    var parametros = {
+        "BorrarMedico": "1",
+        "matricula" : matricula        
+    };
+    console.log (parametros);   
+    $.ajax({
+        data:  parametros,
+        url:   'phpSecretaria.php',
+        type: 'POST',
+        beforeSend: function(){}, 
+	
+        error: function( jqXHR, textStatus, errorThrown ) {
+
+            if (jqXHR.status === 0) {
+    
+                alert('Not connect: Verify Network.');
+    
+            } else if (jqXHR.status == 404) {
+    
+                alert('Requested page not found [404]');
+    
+            } else if (jqXHR.status == 500) {
+    
+                alert('Internal Server Error [500].');
+    
+            } else if (textStatus === 'parsererror') {
+    
+                alert('Requested JSON parse failed.');
+    
+            } else if (textStatus === 'timeout') {
+    
+                alert('Time out error.');
+    
+            } else if (textStatus === 'abort') {
+    
+                alert('Ajax request aborted.');
+    
+            } else {
+    
+                alert('Uncaught Error: ' + jqXHR.responseText);
+    
+            }
+    
+            },
+        
+        complete: function(){},
+
+        success:  function (val)
+            {
+                console.log(val)
+               let x = JSON.parse(val);
+               console.log (x.existe)
+               if (x.existe === '1'){
+                console.log ('ok')                
+                alert('BORRADO Correctamente')
+                $(location).attr('href','index.php');
+                
+               }else{
+                alert('No se BORRO Correctamente')
+                console.log ('nok')
+               }
+            } 
+    })
+}
+
+// EDITAR MEDICO Traer datos
+function EditarMedico(){
+
+    document.getElementById('agregarMedico').style.display = 'none';
+    document.getElementById('editMedico').style.display = 'block';
+
+    matricula = $("#Nombre").val();    
+    var parametros = {
+        "editarMedico": "1",
+        "matricula" : matricula     
+    };
+    console.log(parametros);
+
+    $.ajax({
+        data:  parametros,
+        url:   'phpSecretaria.php',
+        type: 'POST',
+        beforeSend: function(){}, 
+	
+        error: function( jqXHR, textStatus, errorThrown ) {
+
+            if (jqXHR.status === 0) {
+    
+                alert('Not connect: Verify Network.');
+    
+            } else if (jqXHR.status == 404) {
+    
+                alert('Requested page not found [404]');
+    
+            } else if (jqXHR.status == 500) {
+    
+                alert('Internal Server Error [500].');
+    
+            } else if (textStatus === 'parsererror') {
+    
+                alert('Requested JSON parse failed.');
+    
+            } else if (textStatus === 'timeout') {
+    
+                alert('Time out error.');
+    
+            } else if (textStatus === 'abort') {
+    
+                alert('Ajax request aborted.');
+    
+            } else {
+    
+                alert('Uncaught Error: ' + jqXHR.responseText);
+    
+            }
+    
+            },
+        
+        complete: function(){},
+
+        success:  function (val)
+            {
+               let x = JSON.parse(val);
+               console.log (val)
+               if (x.existe === '1'){
+                console.log ('ok')
+                    $("#matriculaMedicoAlta").val(x.Matricula)
+                    $("#NomApe").val(x.NomApe)
+                    $("#Espec").val(x.Especialidad)
+                    $("#Tatencion").val(x.TipoAtencion)
+                    $("#telf").val(x.Telefono)
+                    $("#email").val(x.Email)
+                    $("#Hatencion").val(x.HorarioAtencion)
+                    $("#Consult").val(x.Consultorio)
+                    var inputNombre = document.getElementById("obsText");
+                        inputNombre.value = x.Obs;                    
+               }else{
+                alert("error")
+                console.log ('nok')
+               }
+            } 
+    })
+
 }
 
 // Guardar medico Editado
@@ -701,12 +723,10 @@ function guardarMedicoEdit(){
             {
                let x = JSON.parse(val);
                console.log (val)
-               if (x.existe === '1'){                
+               if (x.existe === '1'){
+                console.log ('ok')
                 alert("OK")
                 borrar ()
-                setTimeout(function(){
-                    $(location).attr('href','index.php');
-                    }, 0);
                 $('#Agregar').modal('hide')
                    
                }else{
@@ -720,43 +740,21 @@ function guardarMedicoEdit(){
 
 // agrega obra social al medico correspondiente.
 function AgregarOBSocMedico(){        
-    matriculaMedicoAlta = $("#matriculaMedicoAlta").val(); 
-    
-    
-
-    dat = $("#ObraSocialAgregar").val()
-
-    console.log (dat)
-
-    if ( dat == 00 ){
-        OBSocSelect = 1;        
-    }else{
-        OBSocSelect = dat
-    }
-
+    matriculaMedicoAlta = $("#matriculaMedicoAlta").val();
+    OBSocSelect = $("#ObraSocialAgregar").val();
     Importe = $("#ObraSocialImporte").val();
-
-    da = $("#EstudiosAgregar").val()
-    if ( da == 00 ){
-        EstudiosAgregar = 1;        
-    }else{
-        EstudiosAgregar = da    
-    }
-
-    EstudiosImporte = $("#EstudiosImporte").val();
-
     tipoObraSocial = $("#tipoObraSocial").val();
-    
-    
+    EstudiosAgregar = $("#EstudiosAgregar").val();
+    EstudiosImporte = $("#EstudiosImporte").val();
 
     var parametros = {
         "AgregarOBSOC" : 1,
+        "OBSocSelect": OBSocSelect,
         "matriculaMedicoAlta" : matriculaMedicoAlta,
-        "ObraSocialAgregar" : OBSocSelect,
-        "ObraSocialImporte" : Importe,
+        "Importe": Importe,
+        "tipoObraSocial": tipoObraSocial,
         "EstudiosAgregar" : EstudiosAgregar,
-        "EstudiosImporte" : EstudiosImporte,
-        "tipoObraSocial" : tipoObraSocial
+        "EstudiosImporte" : EstudiosImporte
     };
 
     console.log(parametros)
@@ -1321,7 +1319,6 @@ function EditarOBS(nume){
                 $("#editarCostoO").val(x.Costo)
                 $("#text").val(x.id)
                 $("#editarCostoE").val(x.CostoEstudio)
-                $("#editarTObraSocial").val(x.TipoObs)
                }else{
                 alert("error")
                 console.log ('nok')
@@ -1334,13 +1331,11 @@ function GuardarEditarOBS(){
     id = $("#text").val();
     editarCostoO = $("#editarCostoO").val();
     editarCostoE = $("#editarCostoE").val();
-    editarCostoT = $("#editarTObraSocial").val();
     var parametros = {
         "GuardarEditarOBS" : 1,
         "id" : id,
         "editarCostoO" : editarCostoO,
-        "editarCostoE" : editarCostoE,
-        "editarCostoT" : editarCostoT
+        "editarCostoE" : editarCostoE
     }
     console.log(parametros)
     $.ajax({
@@ -1591,8 +1586,7 @@ function GuardarEstudio() {
             {
                let x = JSON.parse(val);
                if (x.existe == '1'){
-                alert('Agregado correctamente') ;               
-                $(location).attr('href','index.php');
+                console.log ('ok')                
                 $('#estudios').modal('hide')
                }else{
                 alert("error")
@@ -1866,67 +1860,4 @@ function tablaCancelar(){
                     $('#tablaCancelacion').html(val)
                 } 
         })  
-}
-
-
-// BORRAR cancelacion de citas
-function Borrar(numero){
-    id = numero 
-    var parametros = {
-        "deleteCancelacion" : 1,
-        "idCancelar" : id
-    }
-    console.log(parametros);
-    $.ajax({
-        data:  parametros,
-        url:   'phpSecretaria.php',
-        type: 'POST',
-        beforeSend: function(){}, 
-	
-        error: function( jqXHR, textStatus, errorThrown ) {
-
-            if (jqXHR.status === 0) {
-    
-                alert('Not connect: Verify Network.');
-    
-            } else if (jqXHR.status == 404) {
-    
-                alert('Requested page not found [404]');
-    
-            } else if (jqXHR.status == 500) {
-    
-                alert('Internal Server Error [500].');
-    
-            } else if (textStatus === 'parsererror') {
-    
-                alert('Requested JSON parse failed.');
-    
-            } else if (textStatus === 'timeout') {
-    
-                alert('Time out error.');
-    
-            } else if (textStatus === 'abort') {
-    
-                alert('Ajax request aborted.');
-    
-            } else {
-    
-                alert('Uncaught Error: ' + jqXHR.responseText);
-    
-            }
-    
-            },
-        
-        complete: function(){},
-
-        success:  function (val)
-            {
-               let x = JSON.parse(val);
-               if (x.existe == '1'){                    
-                tablaCancelar()
-               }else{
-                alert("error")              
-               }
-            } 
-    })
 }
