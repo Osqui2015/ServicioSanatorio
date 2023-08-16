@@ -1181,3 +1181,25 @@ if (isset($_POST['VerTablaCancelar'])){
         echo $salida;
 
 }
+
+if (isset($_POST['cancelarG'])){
+
+    $nombreDoctor = $_POST["nombreDoctor"];
+    $tipoCancelacion = $_POST["tipoCancelacion"];
+    $fechaInicio = $_POST["fechaInicio"];
+    $fechaFin = $_POST["fechaFin"].' 23:59:00';
+    $observacion = $_POST["observacion"];
+
+
+    $sql = "INSERT INTO cancelacionmedico (Matricula, Obs, fechaInicio, fechaFin, tipoCancelacion)
+    VALUES ('$nombreDoctor', '$observacion', '$fechaInicio', '$fechaFin', '$tipoCancelacion')";
+
+    if ($conServicios->query($sql) === true) {
+    echo "Record created successfully";
+    } else {
+    echo "Error: " . $sql . "<br>" . $conServicios->error;
+    }
+
+    $conServicios->close();
+
+}

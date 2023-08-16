@@ -1060,15 +1060,17 @@ if (isset($_POST['addCancelacion'])){
 if (isset($_POST['VerTablaCancelar'])){
 
     $turnTabla = mysqli_query($conServicios,"SELECT cm.Id,
-                                                cm.Matricula,
-                                                pr.NomApe,
-                                                cm.Fecha,
-                                                cm.Obs
-                                                FROM cancelacionmedico AS cm
-                                                INNER JOIN profesional AS pr
-                                                ON cm.Matricula = pr.Matricula
-                                                WHERE cm.Fecha >= CURDATE()
-                                                ORDER BY cm.Fecha");
+                                                    cm.Matricula,
+                                                    pr.NomApe,
+                                                    DATE_FORMAT(cm.fechaInicio,'%Y-%m-%d') AS fechaInicio,
+                                                    DATE_FORMAT(cm.fechaFin,'%Y-%m-%d') AS fechaFin,
+                                                    cm.tipoCancelacion,
+                                                    cm.Obs
+                                                    FROM cancelacionmedico AS cm
+                                                    INNER JOIN profesional AS pr
+                                                    ON cm.Matricula = pr.Matricula
+                                                    WHERE DATE_FORMAT(cm.fechaInicio, '%Y-%m') >= DATE_FORMAT(NOW(), '%Y-%m')
+                                                    ORDER BY cm.fechaInicio");
 
             $salida = '<div class="table-responsive">
             <table class="display compact table table-condensed table-striped table-bordered table-hover" id="example">
@@ -1077,8 +1079,11 @@ if (isset($_POST['VerTablaCancelar'])){
                         <th>ID</th>
                         <th>Matricula</th>
                         <th>Nombre y Apellido</th>
-                        <th>Fecha</th>
-                        <th>Observacion</th>  
+                        <th>fecha Inicio</th>
+                        <th>fecha Fin</th>  
+                        <th>tipoCancelacion</th>
+                        <th>Obs</th>
+                        <th>Editar</th>
                         <th>Borrar</th>
                     </tr>
                 </thead>
@@ -1088,11 +1093,14 @@ if (isset($_POST['VerTablaCancelar'])){
                                 <td>'.htmlspecialchars($fila['Id'], ENT_QUOTES, 'UTF-8').'</td> 
                                 <td>'.htmlspecialchars($fila['Matricula'], ENT_QUOTES, 'UTF-8').'</td> 
                                 <td>'.htmlspecialchars($fila['NomApe'], ENT_QUOTES, 'UTF-8').'</td> 
-                                <td>'.htmlspecialchars($fila['Fecha'], ENT_QUOTES, 'UTF-8').'</td>
+                                <td>'.htmlspecialchars($fila['fechaInicio'], ENT_QUOTES, 'UTF-8').'</td>
+                                <td>'.htmlspecialchars($fila['fechaFin'], ENT_QUOTES, 'UTF-8').'</td>
+                                <td>'.htmlspecialchars($fila['tipoCancelacion'], ENT_QUOTES, 'UTF-8').'</td>
                                 <td>'.htmlspecialchars($fila['Obs'], ENT_QUOTES, 'UTF-8').'</td>
+                                <td><button type="button" class="btn btn-dark" onclick="Edit('.$fila['Id'].')" data-toggle="modal" data-target="#EditarCancelacion">Editar</button></td>
                                 <td><button type="button" class="btn btn-danger" onclick="Borrar('.$fila['Id'].')">Borrar</button></td>
                             </tr>';
-            } 
+            }  
             $salida .='</tbody>
                     </table> 
                 </div>
@@ -1153,5 +1161,91 @@ if(isset($_POST['deleteCancelacion'])){
     }
     $valores = JSON_encode($valores,JSON_THROW_ON_ERROR);
         echo $valores;
+
+}
+
+if (isset($_POST['cancelarG'])){
+
+    $nombreDoctor = $_POST["nombreDoctor"];
+    $tipoCancelacion = $_POST["tipoCancelacion"];
+    $fechaInicio = $_POST["fechaInicio"];
+    $fechaFin = $_POST["fechaFin"].' 23:59:00';
+    $observacion = $_POST["observacion"];
+
+
+    $sql = "INSERT INTO cancelacionmedico (Matricula, Obs, fechaInicio, fechaFin, tipoCancelacion)
+    VALUES ('$nombreDoctor', '$observacion', '$fechaInicio', '$fechaFin', '$tipoCancelacion')";
+
+    if ($conServicios->query($sql) === true) {
+    echo "Record created successfully";
+    } else {
+    echo "Error: " . $sql . "<br>" . $conServicios->error;
+    }
+
+    $conServicios->close();
+
+}
+
+if (isset($_POST["editCancelacion"])){
+    $id = $_POST["idCancelar"];
+
+    $resultados = mysqli_query($conServicios,"SELECT cm.Id,
+                                                cm.Matricula,
+                                                pr.NomApe,
+                                                DATE_FORMAT(cm.fechaInicio,'%Y-%m-%d') AS fechaInicio,
+                                                DATE_FORMAT(cm.fechaFin,'%Y-%m-%d') AS fechaFin,
+                                                cm.tipoCancelacion,
+                                                cm.Obs
+                                                FROM cancelacionmedico AS cm
+                                                INNER JOIN profesional AS pr
+                                                ON cm.Matricula = pr.Matricula
+                                                WHERE cm.id = $id;");
+
+    $valores = array();
+    $valores['existe'] = "0";
+
+   
+    if (!$resultados) {
+        echo "Error en la inserción Guardar: ".$conServicios->error;
+        $valores['existe'] = "0";
+    }
+    while($consulta = mysqli_fetch_array($resultados))
+    {
+        $valores['existe'] = "1";         
+        $valores['Id'] = $consulta['Id'];
+        $valores['Matricula'] = $consulta['Matricula'];
+        $valores['NomApe'] = $consulta['NomApe'];
+        $valores['fechaInicio'] = $consulta['fechaInicio'];
+        $valores['fechaFin'] = $consulta['fechaFin'];
+        $valores['tipoCancelacion'] = $consulta['tipoCancelacion'];
+        $valores['Obs'] = $consulta['Obs'];
+    }
+    
+    $valores = JSON_encode($valores,JSON_THROW_ON_ERROR);
+        echo $valores;                                         
+
+
+}
+
+if (isset($_POST['EdcancelarG'])){
+
+    $Id = $_POST["Id"];
+    $NomApe = $_POST["NomApe"];
+    $Matricula = $_POST["Matricula"];
+    $fechaInicio = $_POST["fechaInicio"];
+    $fechaFin = $_POST["fechaFin"].' 23:59:00';
+    $tipoCancelacion = $_POST["tipoCancelacion"];
+    $Obs = $_POST["Obs"];
+
+    $sql = "UPDATE cancelacionmedico
+            SET Fecha = CURDATE(), Obs = '$Obs' , fechaInicio = '$fechaInicio', fechaFin = '$fechaFin', tipoCancelacion = '$tipoCancelacion' WHERE Id = $Id";
+
+    if ($conServicios->query($sql) === true) {
+    echo "Record created successfully";
+    } else {
+    echo "Error: " . $sql . "<br>" . $conServicios->error;
+    }
+
+    $conServicios->close();
 
 }

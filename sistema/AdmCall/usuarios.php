@@ -249,78 +249,77 @@ $menNombre = mysqli_query($conServicios, "SELECT Matricula, NomApe FROM profesio
     </div>
     </div>
 <!-- Agregar Usuario -->
-    <div class="modal fade" id="AgregarUser" tabindex="-1" aria-labelledby="AgregarUserLabel" aria-hidden="true">
-        
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="AgregarUserLabel">Agregar Usuario</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label>Apellido y Nombre</label>
-                    <input type="text" class="form-control" id="NombreApe">
+    <div class="modal fade" id="AgregarUser" tabindex="-1" aria-labelledby="AgregarUserLabel" aria-hidden="true">        
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AgregarUserLabel">Agregar Usuario</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="form-group col-md-8">
-                    <label for="Legajo">Legajo / Usuario </label>
-                    <input type="number" class="form-control" id="Legajo">
-                </div>
-            </div>
+                <div class="modal-body">
+                    
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label>Apellido y Nombre</label>
+                            <input type="text" class="form-control" id="NombreApe">
+                        </div>
+                        <div class="form-group col-md-8">
+                            <label for="Legajo">Legajo / Usuario </label>
+                            <input type="number" class="form-control" id="Legajo">
+                        </div>
+                    </div>
 
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="sector">Sector</label>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="sector">Sector</label>
+                            <br>
+                            <select class="js-select-Espec custom-select form-control" name="sector" id="sector">
+                                <option value="00">ㅤㅤㅤㅤㅤTODOSㅤㅤㅤㅤㅤ</option>
+                                <?php  $menObraSocia = mysqli_query($conServicios, "SELECT * FROM sector");
+                                    while($row=mysqli_fetch_array($menObraSocia)) {
+                                ?>
+                                    <option value="<?php echo utf8_encode($row['id'])?>"> <?php echo utf8_encode($row['Sector'])?></option>
+                                <?php }?>
+                            </select>
+                        </div>            
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="pass">Contraseña</label>
+                            <input type="password" class="form-control" id="pass">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="passw">Confirmar Contraseña</label>
+                            <input type="password" class="form-control" id="passw" onchange="validContr()">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="telf">Teléfono</label>
+                            <input type="number" class="form-control" id="telf">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="email">Email</label>
+                            <input type="text" class="form-control" id="email">
+                        </div>
+                    </div>       
+                    <div class="form-row">
+                        
+                    </div>
                     <br>
-                    <select class="js-select-Espec custom-select form-control" name="sector" id="sector">
-                        <option value="00">ㅤㅤㅤㅤㅤTODOSㅤㅤㅤㅤㅤ</option>
-                        <?php  $menObraSocia = mysqli_query($conServicios, "SELECT * FROM sector");
-                            while($row=mysqli_fetch_array($menObraSocia)) {
-                        ?>
-                            <option value="<?php echo utf8_encode($row['id'])?>"> <?php echo utf8_encode($row['Sector'])?></option>
-                        <?php }?>
-                    </select>
-                </div>            
-            </div>
-
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="pass">Contraseña</label>
-                    <input type="password" class="form-control" id="pass">
+                        
                 </div>
-                <div class="form-group col-md-6">
-                    <label for="passw">Confirmar Contraseña</label>
-                    <input type="password" class="form-control" id="passw" onchange="validContr()">
+                <div class="modal-footer" id="btnGuardar" style="display:none">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button id = "agregarUser" type="button" class="btn btn-primary" onclick="guardarUser()" style="display:none">Guardar</button>
+                    <button id= "editUser" type="button" class="btn btn-primary" onclick="guardarUserEdit()" style="display:none">Guardar M</button>
                 </div>
             </div>
-
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="telf">Teléfono</label>
-                    <input type="number" class="form-control" id="telf">
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="email">Email</label>
-                    <input type="text" class="form-control" id="email">
-                </div>
-            </div>       
-            <div class="form-row">
-                
-            </div>
-            <br>
-                
         </div>
-        <div class="modal-footer" id="btnGuardar" style="display:none">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            <button id = "agregarUser" type="button" class="btn btn-primary" onclick="guardarUser()" style="display:none">Guardar</button>
-            <button id= "editUser" type="button" class="btn btn-primary" onclick="guardarUserEdit()" style="display:none">Guardar M</button>
-        </div>
-        </div>
-    </div>
     </div>
 
 <!-- Modal Sector-->

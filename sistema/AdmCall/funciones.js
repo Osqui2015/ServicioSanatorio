@@ -1,3 +1,6 @@
+
+
+
 function verinfo(numero){
 	console.log (numero);
     matricula = numero;   
@@ -12,7 +15,7 @@ function verinfo(numero){
         url:   'phpSecretaria.php',
         type: 'POST',
         success:function(r){
-            $('#TodosTurnos').html(r)
+            $('#TodosTurnos').html(r) 
         }
     })
 }
@@ -1873,7 +1876,7 @@ function tablaCancelar(){
 function Borrar(numero){
     id = numero 
     var parametros = {
-        "deleteCancelacion" : 1,
+        "deleteCancelacion" : 1, 
         "idCancelar" : id
     }
     console.log(parametros);
@@ -1930,3 +1933,213 @@ function Borrar(numero){
             } 
     })
 }
+
+function Edit(numero){
+    id = numero 
+    var parametros = {
+        "editCancelacion" : 1, 
+        "idCancelar" : id
+    }
+    console.log(parametros);
+    $.ajax({
+        data:  parametros,
+        url:   'phpSecretaria.php',
+        type: 'POST',
+        beforeSend: function(){}, 
+	
+        error: function( jqXHR, textStatus, errorThrown ) {
+
+            if (jqXHR.status === 0) {
+    
+                alert('Not connect: Verify Network.');
+    
+            } else if (jqXHR.status == 404) {
+    
+                alert('Requested page not found [404]');
+    
+            } else if (jqXHR.status == 500) {
+    
+                alert('Internal Server Error [500].');
+    
+            } else if (textStatus === 'parsererror') {
+    
+                alert('Requested JSON parse failed.');
+    
+            } else if (textStatus === 'timeout') {
+    
+                alert('Time out error.');
+    
+            } else if (textStatus === 'abort') {
+    
+                alert('Ajax request aborted.');
+    
+            } else {
+    
+                alert('Uncaught Error: ' + jqXHR.responseText);
+    
+            }
+    
+            },
+        
+        complete: function(){},
+
+         success:  function (val)
+            {
+               let x = JSON.parse(val);
+               console.log (val)
+               if (x.existe === '1'){
+                console.log ('ok')
+                    $("#EId").val(x.Id)
+                    $("#ENombre").val(x.NomApe)
+                    $("#EMatricula").val(x.Matricula)
+                    $("#EfechaInicio").val(x.fechaInicio)
+                    $("#EfechaFin").val(x.fechaFin)
+                    $("#EtipoCancelacion").val(x.tipoCancelacion)
+                    $("#Eobservacion").val(x.Obs)
+               }else{
+                alert("error")
+                console.log ('nok')
+               }
+            } 
+    })
+}
+
+function GEditCancelar(){
+    Id = $("#EId").val();
+    NomApe = $("#ENombre").val();
+    Matricula = $("#EMatricula").val();
+    fechaInicio = $("#EfechaInicio").val();
+    fechaFin = $("#EfechaFin").val();
+    tipoCancelacion = $("#EtipoCancelacion").val();
+    Obs = $("#Eobservacion").val();
+    var parametros = {
+        "EdcancelarG" : 1, 
+        "Id" : Id,
+        "NomApe" : NomApe,
+        "Matricula" : Matricula,
+        "fechaInicio" : fechaInicio,
+        "fechaFin" : fechaFin,
+        "tipoCancelacion" : tipoCancelacion,
+        "Obs" : Obs}
+    console.log(parametros);
+    $.ajax({
+        data:  parametros,
+        url:   'phpSecretaria.php',
+        type: 'POST',
+        beforeSend: function(){}, 
+
+        error: function( jqXHR, textStatus, errorThrown ) {
+
+            if (jqXHR.status === 0) {
+
+                alert('Not connect: Verify Network.');
+
+            } else if (jqXHR.status == 404) {
+
+                alert('Requested page not found [404]');
+
+            } else if (jqXHR.status == 500) {
+
+                alert('Internal Server Error [500].');
+
+            } else if (textStatus === 'parsererror') {
+
+                alert('Requested JSON parse failed.');
+
+            } else if (textStatus === 'timeout') {
+
+                alert('Time out error.');
+
+            } else if (textStatus === 'abort') {
+
+                alert('Ajax request aborted.');
+
+            } else {
+
+                alert('Uncaught Error: ' + jqXHR.responseText);
+
+            }
+
+            },
+        
+        complete: function(){},
+
+        success: function(response) {
+            alert("Los datos se han guardado correctamente");
+            setTimeout(function(){
+            $(location).attr('href','/servicios/sistema/AdmCall/cancelarcita.php');
+            }, 0);
+        } 
+    })  
+
+}
+
+function GCancelar(){
+    var nombreDoctor = $("#Nombre").val();
+    var tipoCancelacion = $("#tipoCancelacion").val();
+    var fechaInicio = $("#fechaInicio").val();
+    var fechaFin = $("#fechaFin").val();
+    var observacion = $("#observacion").val();
+    var parametros = {
+        "cancelarG" : 1,  
+        "nombreDoctor" : nombreDoctor,
+        "tipoCancelacion" : tipoCancelacion,
+        "fechaInicio" : fechaInicio,
+        "fechaFin" : fechaFin,
+        "observacion" : observacion
+    }
+    console.log(parametros);
+    $.ajax({
+        data:  parametros,
+        url:   'phpSecretaria.php',
+        type: 'POST',
+        beforeSend: function(){}, 
+
+        error: function( jqXHR, textStatus, errorThrown ) {
+
+            if (jqXHR.status === 0) {
+
+                alert('Not connect: Verify Network.');
+
+            } else if (jqXHR.status == 404) {
+
+                alert('Requested page not found [404]');
+
+            } else if (jqXHR.status == 500) {
+
+                alert('Internal Server Error [500].');
+
+            } else if (textStatus === 'parsererror') {
+
+                alert('Requested JSON parse failed.');
+
+            } else if (textStatus === 'timeout') {
+
+                alert('Time out error.');
+
+            } else if (textStatus === 'abort') {
+
+                alert('Ajax request aborted.');
+
+            } else {
+
+                alert('Uncaught Error: ' + jqXHR.responseText);
+
+            }
+
+            },
+        
+        complete: function(){},
+
+        success: function(response) {
+            alert("Los datos se han guardado correctamente");
+            setTimeout(function(){
+            $(location).attr('href','/servicios/sistema/AdmCall/cancelarcita.php');
+            }, 0);
+        } 
+    })  
+
+}
+
+// /*-------------------------------------------------*/
+

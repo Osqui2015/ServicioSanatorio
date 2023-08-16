@@ -12,165 +12,113 @@
     </script>";
   }
 
+  require_once 'conHoteleria.php';
+  mysqli_set_charset($conHoteleria, "utf8");
 
-  $infoCard = mysqli_query($conServicios, "SELECT * FROM estados WHERE id = 1;");
+  $hab = mysqli_query($conHoteleria, "SELECT * FROM habitaciones GROUP BY piso;");
+  $estado = mysqli_query($conHoteleria, "SELECT * FROM estados WHERE EstadoHab != '' AND Estado = 1");
+  $estadoDos = mysqli_query($conHoteleria, "SELECT * FROM estados WHERE EstadoHab != '' AND Estado = 2");
 
-  $menuHabitacion = mysqli_query($conServicios, "SELECT * FROM habitacion;");  //order by Orden 
+?> 
 
-  $menuTipoHabitacion= mysqli_query($conServicios, "SELECT * FROM tipohabi");
-
-
-  $estadoHabitacion = mysqli_query($conServicios, "SELECT * FROM estados"); 
-  $estadoHabitacion2 = mysqli_query($conServicios, "SELECT * FROM estados");
-
-  $cargaEstadosHab = mysqli_query($conServicios, "SELECT 
-                                                  he.id,
-                                                  h.Habitaciones,
-                                                  h.Piso,
-                                                  e.Estado,
-                                                  e.Clase,
-                                                  th.TipoHab,
-                                                  th.img
-                                                  FROM 
-                                                  habestados AS he
-                                                  INNER JOIN habitacion AS h
-                                                  ON he.hab = h.Id
-                                                  INNER JOIN estados AS e
-                                                  ON he.Estado = e.Id
-                                                  INNER JOIN tipohabi AS th
-                                                  ON he.Tipo = th.Id")
-
-?>
 <!doctype html>
-<html lang="es-ES">
+<html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-   
-    <?php  include_once "dependencias.php" ?>
-    <title>Hoteleria Adm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Adm Hoteleria</title>
+    <?php require_once "dependencias.php" ?>
+    <link rel="icon" href="../../imagen/modelo.jpg">
   </head>
-  <body >
-    <?php  include_once "menuHoteleria.php" ?>
-    <br><br><br>  
-      <div class="container">
-        <br>
-        <div class="row justify-content-md-center">
-          <div class="col-md-auto mt-3 mb-3">
-              <button type="button" class="btn btn-info" onclick="btnPiso(2)"> Piso Nº 2</button>
-          </div>
-          <div class="col-md-auto mt-3 mb-3">
-              <button type="button" class="btn btn-info" onclick="btnPiso(3)"> Piso Nº 3</button>
-          </div>
-          <div class="col-md-auto mt-3 mb-3">
-              <button type="button" class="btn btn-info" onclick="btnPiso(4)"> Piso Nº 4</button>
-          </div>
-          <div class="col-md-auto mt-3 mb-3">
-              <button type="button" class="btn btn-info" onclick="btnPiso(5)"> Piso Nº 5</button>
-          </div>
-          <div class="col-md-auto mt-3 mb-3">
-              <button type="button" class="btn btn-info" onclick="btnPiso(6)"> Piso Nº 6</button>
-          </div>
-          <div class="col-md-auto mt-3 mb-3">
-              <button type="button" class="btn btn-info" onclick="btnPiso(7)"> Piso Nº 7</button>
-          </div>
+  <body>
+    <?php require_once "menu.php" ?>
+    <p id="pContent" hidden><?php echo $_SESSION['NombreApe'] ?></p>
+
+    <div class="container">
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <?php while($Rhab = $hab->fetch_assoc()){ ?>
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio<?php echo $Rhab['Piso']?>" autocomplete="off" onclick="piso(<?php echo $Rhab['Piso']?>)">
+                <label class="btn btn-outline-primary" for="btnradio<?php echo $Rhab['Piso']?>">Piso <?php echo $Rhab['Piso']?></label>
+            <?php } ?>
         </div>
-        <br>
-        <div class="row justify-content-md-center">
-          <input type="text" class="form" id="idpiso" hidden>
-        </div>
-      </div>
-    <br><br><br> 
-    
-    <div class="card">
-      <div class="card-body">
-        <div id="CargarDatos">
- 
-        </div>
-      </div>
     </div>
+    <br>
+
+
+    <div>
+        <div class="container">
+            
+                <div id="cardHab">
+ 
+                </div>                   
+            
+        </div>
+
+    </div>
+
+    <script src="funciones.js"></script>
     
-
-
-
-
-    <script>
-      $(document).ready(function(){
-          $('#reporteTurno').DataTable({
-
-              "language": {
-                  "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
-                  },
-                  fixedHeader: {
-                  header: true,
-                  footer: true,
-                  },
-                  ordering: false
-          });
-          
-         /* $('.js-select-MenHab').select2();
-          $('.js-select-Especialidad').select2();
-          $('.js-select-Nombre').select2();
-          $('.js-select-TipoHabAdd').select2(); */
-      });
-    
-    </script>
   </body>
 </html>
- 
-<!-- Modal Cambiar Estado -->
-<div class="modal fade" id="cambiarEstado" tabindex="-1" role="dialog" aria-labelledby="cambiarEstadoLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+
+<?php ?>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="EstadoHab" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="EstadoHabLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="cambiarEstadoLabel">Cambiar Estado</h5> 
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>        
+        <h1 class="modal-title fs-5" id="EstadoHabLabel">Cambiar de Estado </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      
-      <div class="modal-body">      
-        Habitacion: <input type="text" size="2" class="form-control" id="IdH" readonly >
-        <br>
-            <select class="form-control" name="EstadoSelect" id="EstadoSelect">
-                <option value="00">TODOS</option>
-                    <?php 
-                        while($row=mysqli_fetch_array($estadoHabitacion)) {
-                    ?>
-                        <option value="<?php echo utf8_encode($row['Id'])?>"> <?php echo utf8_encode($row['Estado'])?> </option>
-                    <?php }?>
-            </select>
-        <br>
-        Observación: 
-                        <textarea class="form-control" id="Observacion" rows="3"></textarea>
-      </div>
-      <div class="modal-footer"> 
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" onclick="GEstadoH()">Guardar Cambios</button> 
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Historial Estado -->
-<div class="modal fade" id="HistorialEstado" tabindex="-1" aria-labelledby="HistorialEstadoLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="HistorialEstadoLabel">Historial de Estados</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">            
-            <br>
-            <div id="HistorialE">
-
+      <div class="modal-body">
+        <div class="container">
+            <div class="text-center fs-4">
+                Habitacion: <span  id="NumHab"></span>
             </div>
+        <br>
+            <div class="row justify-content-md-center">
+                <div class="col-6">
+                <div id="salidaPositiva" hidden>
+                  <select class="form-select" aria-label="Default" id="selectEstado" >
+                      <option selected></option>
+                      <?php while($ReEstado = $estadoDos->fetch_assoc()): ?>
+                          <option value="<?php echo $ReEstado['Id']; ?>">                            
+                              <?php echo $ReEstado['EstadoHab']; ?>
+                          </option>
+                      <?php endwhile; ?>
+                  </select>
+                </div>
+                <div id="salidaNegativa" hidden>
+                  <select class="form-select" aria-label="Default" id="selectEstadoNeg">
+                      <option selected></option>
+                      <?php while($ReEstado = $estado->fetch_assoc()): ?>
+                          <option value="<?php echo $ReEstado['Id']; ?>">                            
+                              <?php echo $ReEstado['EstadoHab']; ?>
+                          </option>
+                      <?php endwhile; ?>
+                  </select>
+                </div>
+
+
+
+               </div>
+            </div>
+            <br>
+            <div class="row justify-content-md-center">
+                <div class="col-6">
+                    <label for="ObsHab" class="form-label">Observaciones</label>
+                    <textarea class="form-control" id="ObsHab" rows="4"></textarea>
+                </div>
+            </div>
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
-        
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="GEstadosHab()" id="PositivoG">Guardar Piso</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="GEstadosHabOffice()" id="NegativoG">Guardar Office</button>
       </div>
     </div>
   </div>
@@ -178,60 +126,22 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="datosPaciente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+<div class="modal fade" id="Hhabitacion" tabindex="-1" aria-labelledby="HhabitacionLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Datos Paciente</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h1 class="modal-title fs-5" id="HhabitacionLabel">Historial de Habitacion</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        
+        <div id="tablaHabi">
 
-        <div class="col-md">
-          <br>
-          <!--- CAMA-->
-          <label for="staticEmail" class="col-sm-2 col-form-label">CAMA </label>
-          <br>
-          <label for="staticEmail" class="col-sm-2 col-form-label">DNI</label>
-          <div class="col-sm-10">
-             <input class="form-control" type="text"  id="dni" >
-          </div>
-          <label for="staticEmail" class="col-sm-6 col-form-label">Nombre y Apellido</label>
-          <div class="col-sm-10">
-             <input class="form-control" type="text"  id="nomape" >
-          </div>
-          <label for="staticEmail" class="col-sm-6 col-form-label">Telefono</label>
-          <div class="col-sm-10">
-             <input class="form-control" type="text"  id="tel" >
-          </div>
-          <br>
-          <div class="col-md-auto">
-            <form id="form">		
-              <label class="mx-3">
-                <input type="radio" name="Acomp" id="AcompB" value="1" >
-                Acompañante
-              </label>
-              <label class="mx-3">
-                <input type="radio" name="Acomp" id="AcompB" value="0" checked>
-                Paciente
-              </label>
-            </form>
-          </div>
-          <br>
-          <div class="col-sm-10">
-              <button type="button" class="btn btn-info" onclick="GuardarB()">Dar de Alta</button>
-          </div>
-          <br><br>
+         
+
         </div>
-
-
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>        
       </div>
     </div>
   </div>

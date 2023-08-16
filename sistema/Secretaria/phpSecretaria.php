@@ -403,7 +403,7 @@ if(isset($_POST['fbuscarMedico'])){
     $docInfo = mysqli_query($conServicios,"SELECT * FROM profesional WHERE Matricula = $matricula;");   
 
 
-    $salida = '<div class="card mb-3" style="max-width: 500px;">
+    $salida = '<div class="">
     <div class="row no-gutters">            
     <div class="col">
     <div class="card-body">';
@@ -415,7 +415,7 @@ if(isset($_POST['fbuscarMedico'])){
     <p class="card-text"> '.utf8_encode($datos['HorarioAtencion']).' </p>                                
     <p class="card-text"><small class="text-muted">Teléfono: '.utf8_encode($datos['Telefono']).' </small></p>
     <p class="card-text"><small class="text-muted">Email: </small></p>
-    <label for="exampleFormControlTextarea1">Example textarea</label>
+    <label for="exampleFormControlTextarea1">Información Adicional</label>
     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly > '.utf8_encode($datos['Obs']).' </textarea>';
 
     } 
@@ -427,9 +427,6 @@ if(isset($_POST['fbuscarMedico'])){
                 </div>
                 </div>
                 <br>';
-
-
-
 
         $salida .= '<div class="table-responsive">
         <table class="display compact table table-condensed table-striped table-bordered table-hover" id="example">
@@ -467,48 +464,15 @@ if(isset($_POST['fbuscarMedico'])){
 
     <script type="text/javascript">
         $(document).ready(function() {
-        $("#example").DataTable({ 
-        "language": {
-        "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
-        },
-        fixedHeader: {
-        header: true,
-        footer: true,
-        },
-        dom: "Bfrtip",
-        buttons:[ 
-        {
-        extend:    "excelHtml5",
-        text:      "Exportar a Excel",
-        titleAttr: "Exportar a Excel",
-        title:     "Título del documento",
-        exportOptions: {
-        columns: [2,3,4,5,6,7]
-        }
-        },
-        {
-        extend:    "pdfHtml5",
-        text:      "Exportar a PDF",
-        titleAttr: "Exportar a PDF",
-        className: "btn btn-danger",
-        title:     "Título del documento",
-        exportOptions: {
-        columns: [2,3,4,5,6,7]
-        }                    
-        },
-        {
-        extend:    "print",
-        text:      "Imprimir",
-        titleAttr: "Imprimir",
-        className: "btn btn-info",
-        exportOptions: {
-        columns: [2,3,4,5,6,7]
-        }
-
-        }
-        ],                        
-        ordering: true                        
-        });
+            $("#example").DataTable({ 
+                    "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
+                },
+                fixedHeader: {
+                    header: true,
+                    footer: true,
+                }
+            });
         });
     </script>';
     echo $salida;
@@ -518,107 +482,46 @@ if(isset($_POST['fbuscarMedico'])){
 
 if (isset($_POST['addCancelacion'])){
 
-    $matricula = $_POST['NombreM'];
-    $fechaCancelacion = $_POST['fechaCancelacion'];
+    $matricula = $_POST['NombreM'];    
 
-   $Consulta = "SELECT cm.Id,
-                        cm.Matricula,
-                        pr.NomApe,
-                        cm.Fecha,
-                        cm.Obs
-                        FROM cancelacionmedico AS cm
-                        INNER JOIN profesional AS pr
-                        ON cm.Matricula = pr.Matricula ";
-
-    if (($matricula != 0) && ($fechaCancelacion == 0)){
-        $Consulta .= "WHERE cm.Matricula = $matricula;";
+    $events = array();
+    $query = "SELECT * FROM cancelacionmedico";
+    $result = mysqli_query($conServicios, $query);
+    while ($row = mysqli_fetch_assoc($result)) {
+        $start = $row['fechaInicio'];
+        $end = $row['fechaFin'];
+        $event = array(
+            'title' => $row['tipoCancelacion'].' '.$row['Obs'],
+            'start' => $start,
+            'end' => $end
+        );
+        $events[] = $event;
     }
-    if (($matricula == 0) && ($fechaCancelacion != 0)){
-        $Consulta .= "WHERE Fecha = '$fechaCancelacion';";
+    echo json_encode($events);
+
+    mysqli_close($conServicios);
+
+
+}
+
+if (isset($_POST['cancelarG'])){
+
+    $nombreDoctor = $_POST["nombreDoctor"];
+    $tipoCancelacion = $_POST["tipoCancelacion"];
+    $fechaInicio = $_POST["fechaInicio"];
+    $fechaFin = $_POST["fechaFin"].' 23:59:00';
+    $observacion = $_POST["observacion"];
+
+
+    $sql = "INSERT INTO cancelacionmedico (Matricula, Obs, fechaInicio, fechaFin, tipoCancelacion)
+    VALUES ('$nombreDoctor', '$observacion', '$fechaInicio', '$fechaFin', '$tipoCancelacion')";
+
+    if ($conServicios->query($sql) === true) {
+    echo "Record created successfully";
+    } else {
+    echo "Error: " . $sql . "<br>" . $conServicios->error;
     }
-    if (($matricula != 0) && ($fechaCancelacion != 0)){
-        $Consulta .= "WHERE Fecha >= '$fechaCancelacion'
-                    AND cm.Matricula = $matricula;";
-    }    
 
-
-    $turnTabla = mysqli_query($conServicios,$Consulta);
-
-    $salida = '<div class="table-responsive">
-        <table class="display compact table table-condensed table-striped table-bordered table-hover" id="example">
-            <thead>
-                <tr>
-                    <th > ID </th>
-                    <th > Matricula </th>
-                    <th > Nombre y Apellido </th>
-                    <th > Fecha </th>
-                    <th > Observacion </th>  
-                </tr>
-            </thead>
-       
-            
-        
-            <tbody>';
-
-        while($fila = $turnTabla->fetch_assoc()){
-                    $salida.= '<td>'.utf8_encode($fila['Id']).'</td> 
-                                <td>'.utf8_encode($fila['Matricula']).'</td> 
-                                <td>'.utf8_encode($fila['NomApe']).'</td> 
-                                <td>'.utf8_encode($fila['Fecha']).'</td>
-                                <td>'.utf8_encode($fila['Obs']).'</td>
-                            </tr>';
-                } 
-                
-            $salida.='</tbody>
-                    </table> 
-                </div>
-                
-                <script type="text/javascript">
-                $(document).ready(function() {
-                    $("#example").DataTable({ 
-                        "language": {
-                        "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
-                        },
-                        fixedHeader: {
-                            header: true,
-                            footer: true,
-                        },
-                        dom: "Bfrtip",
-                        buttons:[ 
-                            {
-                                    extend:    "excelHtml5",
-                                    text:      "Exportar a Excel",
-                                    titleAttr: "Exportar a Excel",
-                                    title:     "Título del documento",
-                                    exportOptions: {
-                                        columns: [2,3,4,5,6,7]
-                                    }
-                            },
-                            {
-                                    extend:    "pdfHtml5",
-                                    text:      "Exportar a PDF",
-                                    titleAttr: "Exportar a PDF",
-                                    className: "btn btn-danger",
-                                    title:     "Título del documento",
-                                    exportOptions: {
-                                        columns: [2,3,4,5,6,7]
-                                    }                    
-                            },
-                            {
-                                    extend:    "print",
-                                    text:      "Imprimir",
-                                    titleAttr: "Imprimir",
-                                    className: "btn btn-info",
-                                    exportOptions: {
-                                        columns: [2,3,4,5,6,7]
-                                    }
-      
-                            }
-                        ],                        
-                        ordering: true                        
-                    });
-                });
-            </script>';
-        echo $salida;
+    $conServicios->close();
 
 }

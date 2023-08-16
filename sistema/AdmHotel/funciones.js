@@ -1,901 +1,260 @@
-function btnPiso(p){
-    console.log("carga")
-    piso = p;
-    $("#idpiso").val(piso)
+$(document).ready(function() {
+    $('#tablaHab').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        pageLength: 25,
+        language: {
+            search: "Buscar"
+        },
+        columnDefs: [
+            {
+                targets: 4,
+                render: DataTable.render.date(),
+            },
+        ],
+    } );
+} );
+
+function piso(x){ 
+    piso = x;
     var parametros = {
         "cargaHab" : 1,
         "piso" : piso
-        };
+    };
+    console.log(parametros)
+    $.ajax({
+        data: parametros,
+        url: 'procesos.php',
+        type: 'POST'
+    })
+    .done(function(val) {
+        $('#cardHab').html(val); 
+    })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+    if (jqXHR.status === 0) {
+        alert('Not connect: Verify Network.');
+    } else if (jqXHR.status == 404) {
+        alert('Requested page not found [404]');
+    } else if (jqXHR.status == 500) {
+        alert('Internal Server Error [500].');
+    } else if (textStatus === 'parsererror') {
+        alert('Requested JSON parse failed.');
+    } else if (textStatus === 'timeout') {
+        alert('Time out error.');
+    } else if (textStatus === 'abort') {
+        alert('Ajax request aborted.');
+    } else {
+        alert('Uncaught Error: ' + jqXHR.responseText);
+    }
+    });
       
-        console.log(parametros)
-        $.ajax({
-            data:  parametros,
-            url:   'phpHotel.php',
-            type: 'POST',
-            beforeSend: function(){}, 
+} 
+
+function CamEstado(x){
+    var paragraph = document.getElementById("NumHab");    
+    paragraph.innerHTML = x;
     
-            error: function( jqXHR, textStatus, errorThrown ) {
-    
-                if (jqXHR.status === 0) {
-    
-                    alert('Not connect: Verify Network.');
-    
-                } else if (jqXHR.status == 404) {
-    
-                    alert('Requested page not found [404]');
-    
-                } else if (jqXHR.status == 500) {
-    
-                    alert('Internal Server Error [500].');
-    
-                } else if (textStatus === 'parsererror') {
-    
-                    alert('Requested JSON parse failed.');
-    
-                } else if (textStatus === 'timeout') {
-    
-                    alert('Time out error.');
-    
-                } else if (textStatus === 'abort') {
-    
-                    alert('Ajax request aborted.');
-    
-                } else {
-    
-                    alert('Uncaught Error: ' + jqXHR.responseText);
-    
-                }
-    
-                },
-            
-            complete: function(){},
-    
-            success:  function (val)
-                {
-                    $('#CargarDatos').html(val)
-                } 
-        })
+  // Obtener el valor del span
+  let valorSpan = document.getElementById('NumHab').textContent;
+
+  // Convertir el valor en un número entero
+  let numero = parseInt(valorSpan);
+
+  if (numero >= 0) {
+    document.getElementById('salidaPositiva').removeAttribute('hidden');
+    document.getElementById('salidaNegativa').setAttribute('hidden', '');
+
+    document.getElementById('PositivoG').removeAttribute('hidden');
+    document.getElementById('NegativoG').setAttribute('hidden', '');
+  } else {
+    document.getElementById('salidaNegativa').removeAttribute('hidden');
+    document.getElementById('salidaPositiva').setAttribute('hidden', '');
+
+    document.getElementById('NegativoG').removeAttribute('hidden');
+    document.getElementById('PositivoG').setAttribute('hidden', '');
+  }
+
 }
 
-
-function IdEstado(numero){
-    n = numero;
-    console.log(n);
-    $("#IdH").val(n);
-    LimpiarEstado()
-}
-
-function GEstadoH(){
-    idHab = $("#IdH").val();
-    idest = $("#EstadoSelect").val();
-    obs = $("#Observacion").val()
-
-    var parametros = {
-        "editEstadoHab" : 1,
-        "idHab": idHab,
-        "idest": idest,
-        "obs" : obs
-    }
-    console.log (parametros);
-    $.ajax({
-        data:  parametros,
-        url:   'phpHotel.php',
-        type: 'POST',
-        beforeSend: function(){}, 
-	
-        error: function( jqXHR, textStatus, errorThrown ) {
-
-            if (jqXHR.status === 0) {
-    
-                alert('Not connect: Verify Network.');
-    
-            } else if (jqXHR.status == 404) {
-    
-                alert('Requested page not found [404]');
-    
-            } else if (jqXHR.status == 500) {
-    
-                alert('Internal Server Error [500].');
-    
-            } else if (textStatus === 'parsererror') {
-    
-                alert('Requested JSON parse failed.');
-    
-            } else if (textStatus === 'timeout') {
-    
-                alert('Time out error.');
-    
-            } else if (textStatus === 'abort') {
-    
-                alert('Ajax request aborted.');
-    
-            } else {
-    
-                alert('Uncaught Error: ' + jqXHR.responseText);
-    
-            }
-    
-            },
-        
-        complete: function(){},
-
-        success:  function (val)
-            {
-               let x = JSON.parse(val);              
-               if (x.existe === '1'){
-                
-                $('#cambiarEstado').modal('hide')
-                console.log ('ok')
-                p = $("#idpiso").val()
-                btnPiso(p)
-                
-               }else{
-                alert("error")
-                console.log ('nok')
-               }
-            } 
-    }) 
-}
-function LimpiarEstado(){
-    $("#EstadoSelect").val('');
-    $("#Observacion").val('');
-}
-
-function HistorialEstado(numero){    
-    idHab = numero;
-    var parametros = {
-        "cargaHistorialEstado" : 1,
-        "idHab" : idHab
-    };
-    
-    console.log(parametros)
-    $.ajax({
-        data:  parametros,
-        url:   'phpHotel.php',
-        type: 'POST',
-        beforeSend: function(){}, 
-
-        error: function( jqXHR, textStatus, errorThrown ) {
-
-            if (jqXHR.status === 0) {
-
-                alert('Not connect: Verify Network.');
-
-            } else if (jqXHR.status == 404) {
-
-                alert('Requested page not found [404]');
-
-            } else if (jqXHR.status == 500) {
-
-                alert('Internal Server Error [500].');
-
-            } else if (textStatus === 'parsererror') {
-
-                alert('Requested JSON parse failed.');
-
-            } else if (textStatus === 'timeout') {
-
-                alert('Time out error.');
-
-            } else if (textStatus === 'abort') {
-
-                alert('Ajax request aborted.');
-
-            } else {
-
-                alert('Uncaught Error: ' + jqXHR.responseText);
-
-            }
-
-            },
-        
-        complete: function(){},
-
-        success:  function (val)
-            {
-                $('#HistorialE').html(val)
-            } 
-    })
+function LimpiarEstado (){
+    $("#selectEstado").val('');
+    $("#ObsHab").val('');
 }
 
 
 
+function GEstadosHab(){
+  var span = document.getElementById("NumHab");
+  var valorSpan = span.textContent;
 
-
-
-
-// SECTOR USUARIO
-
-function selectUser(){
-    Legajo = $("#Nombre").val();
-    console.log ($("#Nombre").val());
-
-    console.log ($("#ObraSocial").val());
-    Sect = $("#Sect").val ();
-
-    if ((Legajo == 00 ) && (Sect == 00)){
-        console.log ('vacio');
-        setTimeout(function(){
-            $(location).attr('href','usuarios.php');
-            }, 0);
-    }else{
-        var parametros = {
-            "TablaUser": "1",
-            "Sect" : Sect,
-            "Legajo" : Legajo        
-        };
-        console.log(parametros)
-        $.ajax({
-            data:  parametros,
-            url:   'phpHotel.php',
-            type: 'POST',
-            success:function(r){
-                $('#misTurnos').html(r)
-            }
-        })
-    }
-}
-/// Usuario botón agregar
-function AgregarUser(){      
-    document.getElementById('btnGuardar').style.display = 'block';
-    document.getElementById('btnagregarUser').style.display = 'block';
-    document.getElementById('editUser').style.display = 'none';
-}
-
-/// Usuario botón Editar y Traer datos usuario
-function EditarUser(){  
-    document.getElementById('btnGuardar').style.display = 'block';
-    document.getElementById('btnagregarUser').style.display = 'none';
-    document.getElementById('editUser').style.display = 'block';
-    Legajo = $("#Nombre").val();    
-    var parametros = {
-        "editarUser": "1",
-        "Legajo" : Legajo     
-    };
-    console.log(parametros);
-
-    $.ajax({
-        data:  parametros,
-        url:   'phpHotel.php',
-        type: 'POST',
-        beforeSend: function(){}, 
-	
-        error: function( jqXHR, textStatus, errorThrown ) {
-
-            if (jqXHR.status === 0) {
-    
-                alert('Not connect: Verify Network.');
-    
-            } else if (jqXHR.status == 404) {
-    
-                alert('Requested page not found [404]');
-    
-            } else if (jqXHR.status == 500) {
-    
-                alert('Internal Server Error [500].');
-    
-            } else if (textStatus === 'parsererror') {
-    
-                alert('Requested JSON parse failed.');
-    
-            } else if (textStatus === 'timeout') {
-    
-                alert('Time out error.');
-    
-            } else if (textStatus === 'abort') {
-    
-                alert('Ajax request aborted.');
-    
-            } else {
-    
-                alert('Uncaught Error: ' + jqXHR.responseText);
-    
-            }
-    
-            },
-        
-        complete: function(){},
-
-        success:  function (val)
-            {
-               let x = JSON.parse(val);
-               console.log (val)
-               if (x.existe === '1'){
-                console.log ('ok')
-                    $("#Legajo").val(x.Usuario)
-                    $("#pass").val(x.Contra)
-                    $("#passw").val(x.Contra)
-                    $("#NombreApe").val(x.NombreApe)
-                    $("#sector").val(x.Sector)
-                    $("#telf").val(x.Telefono)
-                    $("#email").val(x.Email)                    
-               }else{
-                alert("error")
-                console.log ('nok')
-               }
-            } 
-    })
-
-
-}
-
-// Guardar Usuario
-function guardarUser(){
-    Nombre = $("#NombreApe").val();
-    Legajo = $("#Legajo").val();
-    sector = $("#sector").val();
-    passw = $("#passw").val();
-    telf = $("#telf").val();
-    email = $("#email").val();
-    tipo = 1
- 
-    var parametros = {
-        "GUser" : 1,
-        "Nombre"  : Nombre ,
-        "Legajo"  : Legajo ,
-        "sector"  : sector ,
-        "passw"  : passw ,
-        "telf"  : telf ,
-        "email" : email,
-        "tipo" : tipo 
-    }
-    console.log(parametros);
-    $.ajax({
-        data:  parametros,
-        url:   'phpHotel.php',
-        type: 'POST',
-        beforeSend: function(){}, 
-	
-        error: function( jqXHR, textStatus, errorThrown ) {
-
-            if (jqXHR.status === 0) {
-    
-                alert('Not connect: Verify Network.');
-    
-            } else if (jqXHR.status == 404) {
-    
-                alert('Requested page not found [404]');
-    
-            } else if (jqXHR.status == 500) {
-    
-                alert('Internal Server Error [500].');
-    
-            } else if (textStatus === 'parsererror') {
-    
-                alert('Requested JSON parse failed.');
-    
-            } else if (textStatus === 'timeout') {
-    
-                alert('Time out error.');
-    
-            } else if (textStatus === 'abort') {
-    
-                alert('Ajax request aborted.');
-    
-            } else {
-    
-                alert('Uncaught Error: ' + jqXHR.responseText);
-    
-            }
-    
-            },
-        
-        complete: function(){},
-
-        success:  function (val)
-            {
-                console.log(val)
-               let x = JSON.parse(val);
-               console.log (x.existe)
-               if (x.existe === '1'){
-                console.log ('ok')
-                alert('Agregado Correctamente')
-                
-                $('#AgregarUser').modal('hide')
-               }else{
-                alert('No se Agrego Correctamente')
-                console.log ('nok')
-               }
-            } 
-    })
-}
-function guardarUserEdit(){
-    Nombre = $("#NombreApe").val();
-    Legajo = $("#Legajo").val();
-    sector = $("#sector").val();
-    passw = $("#passw").val();
-    telf = $("#telf").val();
-    email = $("#email").val();
-    var parametros = {
-        "GEditUser" : 1,
-        "Nombre"  : Nombre ,
-        "Legajo"  : Legajo ,
-        "sector"  : sector ,
-        "passw"  : passw ,
-        "telf"  : telf ,
-        "email" : email 
-    }
-    console.log(parametros);
-    $.ajax({
-        data:  parametros,
-        url:   'phpHotel.php',
-        type: 'POST',
-        beforeSend: function(){}, 
-	
-        error: function( jqXHR, textStatus, errorThrown ) {
-
-            if (jqXHR.status === 0) {
-    
-                alert('Not connect: Verify Network.');
-    
-            } else if (jqXHR.status == 404) {
-    
-                alert('Requested page not found [404]');
-    
-            } else if (jqXHR.status == 500) {
-    
-                alert('Internal Server Error [500].');
-    
-            } else if (textStatus === 'parsererror') {
-    
-                alert('Requested JSON parse failed.');
-    
-            } else if (textStatus === 'timeout') {
-    
-                alert('Time out error.');
-    
-            } else if (textStatus === 'abort') {
-    
-                alert('Ajax request aborted.');
-    
-            } else {
-    
-                alert('Uncaught Error: ' + jqXHR.responseText);
-    
-            }
-    
-            },
-        
-        complete: function(){},
-
-        success:  function (val)
-            {
-                console.log(val)
-               let x = JSON.parse(val);
-               console.log (x.existe)
-               if (x.existe === '1'){
-                console.log ('ok')
-                alert('Editado Correctamente')
-                
-                $('#AgregarUser').modal('hide')
-               }else{
-                alert('No se Editado Correctamente')
-                console.log ('nok')
-               }
-            } 
-    })
-}
-
-// borrar Username
-function BorrarUSer(){
-    Legajo = $("#Nombre").val();    
-    var parametros = {
-        "BorrarUser": "1",
-        "Legajo" : Legajo     
-    };
-    console.log(parametros);
-
-    $.ajax({
-        data:  parametros,
-        url:   'phpHotel.php',
-        type: 'POST',
-        beforeSend: function(){}, 
-	
-        error: function( jqXHR, textStatus, errorThrown ) {
-
-            if (jqXHR.status === 0) {
-    
-                alert('Not connect: Verify Network.');
-    
-            } else if (jqXHR.status == 404) {
-    
-                alert('Requested page not found [404]');
-    
-            } else if (jqXHR.status == 500) {
-    
-                alert('Internal Server Error [500].');
-    
-            } else if (textStatus === 'parsererror') {
-    
-                alert('Requested JSON parse failed.');
-    
-            } else if (textStatus === 'timeout') {
-    
-                alert('Time out error.');
-    
-            } else if (textStatus === 'abort') {
-    
-                alert('Ajax request aborted.');
-    
-            } else {
-    
-                alert('Uncaught Error: ' + jqXHR.responseText);
-    
-            }
-    
-            },
-        
-        complete: function(){},
-
-        success:  function (val)
-            {
-               let x = JSON.parse(val);
-               console.log (val)
-               if (x.existe === '1'){
-                alert ('ok')                                      
-               }else{
-                alert("error")                
-               }
-            } 
-    })
-}
-
-// comparar contraseñas Agregar Username
-
-function validContr () {
-	pass1 = $("#pass").val();
-	pass2 = $("#passw").val();
-	if(pass1 == pass2){
-		alert('correcto')
-        document.getElementById('btnGuardar').style.display = 'block';        
-	}
-	else{
-		alert('Error')
-	}
-}
-
-// botón agregar sector
-function AgregarSector() {
-    document.getElementById('GuardarSector').style.display = 'block';
-    document.getElementById('GuardarSectorModi').style.display = 'none';
-}
-// sector guardar
-function GuardarSector(){
-    nomSector = $("#nomSector").val();
-
-    var parametros = {
-        "Gsector" : 1,
-        "nomSector": nomSector
-    }
-    console.log(parametros)
-    $.ajax({
-        data:  parametros,
-        url:   'phpHotel.php',
-        type: 'POST',
-        beforeSend: function(){}, 
-	
-        error: function( jqXHR, textStatus, errorThrown ) {
-
-            if (jqXHR.status === 0) {
-    
-                alert('Not connect: Verify Network.');
-    
-            } else if (jqXHR.status == 404) {
-    
-                alert('Requested page not found [404]');
-    
-            } else if (jqXHR.status == 500) {
-    
-                alert('Internal Server Error [500].');
-    
-            } else if (textStatus === 'parsererror') {
-    
-                alert('Requested JSON parse failed.');
-    
-            } else if (textStatus === 'timeout') {
-    
-                alert('Time out error.');
-    
-            } else if (textStatus === 'abort') {
-    
-                alert('Ajax request aborted.');
-    
-            } else {
-    
-                alert('Uncaught Error: ' + jqXHR.responseText);
-    
-            }
-    
-            },
-        
-        complete: function(){},
-
-        success:  function (val)
-            {
-               let x = JSON.parse(val);
-               console.log (x.existe)
-               if (x.existe === '1'){
-                console.log ('ok')
-                alert('Agregado Correctamente')                
-                $('#SectorModal').modal('hide')
-               }else{
-                alert('No se Agrego Correctamente')
-                console.log ('nok')
-               }
-            }
-
-            
-    })
-}
-
-
-// btn editar costo traer datos
-function EditarOBS(nume){
+  SEstado = $("#selectEstado").val();
+  ObsHab = $("#ObsHab").val();
+  var user = document.getElementById("pContent").textContent;
   
-    console.log (nume)
     var parametros = {
-        "editTraerObsMedico":1,
-        "nume" : nume
-    }
-    console.log (parametros);   
+        "EstadoHab" : 1,
+        "SEstado" : SEstado,
+        "valorSpan" : valorSpan,
+        "ObsHab" : ObsHab,
+        "user" : user
+    };
+  console.log(parametros)
     $.ajax({
-        data:  parametros,
-        url:   'phpHotel.php',
-        type: 'POST',
-        beforeSend: function(){}, 
-	
-        error: function( jqXHR, textStatus, errorThrown ) {
-
-            if (jqXHR.status === 0) {
-    
-                alert('Not connect: Verify Network.');
-    
-            } else if (jqXHR.status == 404) {
-    
-                alert('Requested page not found [404]');
-    
-            } else if (jqXHR.status == 500) {
-    
-                alert('Internal Server Error [500].');
-    
-            } else if (textStatus === 'parsererror') {
-    
-                alert('Requested JSON parse failed.');
-    
-            } else if (textStatus === 'timeout') {
-    
-                alert('Time out error.');
-    
-            } else if (textStatus === 'abort') {
-    
-                alert('Ajax request aborted.');
-    
-            } else {
-    
-                alert('Uncaught Error: ' + jqXHR.responseText);
-    
-            }
-    
-            },
-        
-        complete: function(){},
-
-        success:  function (val)
-            {
-               let x = JSON.parse(val);               
-               if (x.existe == '1'){
-                console.log ('ok') 
-                $("#editarCostoO").val(x.Costo)
-                $("#text").val(x.id)                                             
-               }else{
-                alert("error")
-                console.log ('nok')
-               }
-            } 
+        data: parametros,
+        url: 'procesos.php',
+        type: 'POST'
     })
-}
-// guardar editar consto
-function GuardarEditarOBS(){
-    id = $("#text").val();
-    editarCostoO = $("#editarCostoO").val();
-    var parametros = {
-        "GuardarEditarOBS" : 1,
-        "id" : id,
-        "editarCostoO" : editarCostoO
+    .done(function(val) {                
+        let primerNumero = Math.abs(valorSpan).toString().substring(0, 1);
+        LimpiarEstado();
+        piso(primerNumero);        
+    })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+    if (jqXHR.status === 0) {
+        alert('Not connect: Verify Network.');
+    } else if (jqXHR.status == 404) {
+        alert('Requested page not found [404]');
+    } else if (jqXHR.status == 500) {
+        alert('Internal Server Error [500].');
+    } else if (textStatus === 'parsererror') {
+        alert('Requested JSON parse failed.');
+    } else if (textStatus === 'timeout') {
+        alert('Time out error.');
+    } else if (textStatus === 'abort') {
+        alert('Ajax request aborted.');
+    } else {
+        alert('Uncaught Error: ' + jqXHR.responseText);
     }
+    });
+}
+
+function ReportePiso(x){
+    piso = x; 
+    var parametros = {
+        "cargaReporteHab" : 1,
+        "piso" : piso
+    }; 
     console.log(parametros)
     $.ajax({
-        data:  parametros,
-        url:   'phpHotel.php',
-        type: 'POST',
-        beforeSend: function(){}, 
-	
-        error: function( jqXHR, textStatus, errorThrown ) {
-
-            if (jqXHR.status === 0) {
-    
-                alert('Not connect: Verify Network.');
-    
-            } else if (jqXHR.status == 404) {
-    
-                alert('Requested page not found [404]');
-    
-            } else if (jqXHR.status == 500) {
-    
-                alert('Internal Server Error [500].');
-    
-            } else if (textStatus === 'parsererror') {
-    
-                alert('Requested JSON parse failed.');
-    
-            } else if (textStatus === 'timeout') {
-    
-                alert('Time out error.');
-    
-            } else if (textStatus === 'abort') {
-    
-                alert('Ajax request aborted.');
-    
-            } else {
-    
-                alert('Uncaught Error: ' + jqXHR.responseText);
-    
-            }
-    
-            },
-        
-        complete: function(){},
-
-        success:  function (val)
-            {
-               let x = JSON.parse(val);               
-               if (x.existe == '1'){
-                console.log ('ok')
-                verObraSocialCarga()
-                $('#editarCostoOBS').modal('hide')
-               }else{
-                alert("error")
-                console.log ('nok')
-               }
-            } 
+        data: parametros,
+        url: '/servicios/sistema/AdmHotel/procesos/reporte.php',
+        type: 'POST'
     })
-}
-
-function BorrarOBS(nume){
-    alert ("Borrar")
-    console.log (nume)
-    var parametros = {
-        "deleteObsMedico":1,
-        "nume" : nume
+    .done(function(val) {
+        $('#TabReporte').html(val);
+    })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+    if (jqXHR.status === 0) {
+        alert('Not connect: Verify Network.');
+    } else if (jqXHR.status == 404) {
+        alert('Requested page not found [404]');
+    } else if (jqXHR.status == 500) {
+        alert('Internal Server Error [500].');
+    } else if (textStatus === 'parsererror') {
+        alert('Requested JSON parse failed.');
+    } else if (textStatus === 'timeout') {
+        alert('Time out error.');
+    } else if (textStatus === 'abort') {
+        alert('Ajax request aborted.');
+    } else {
+        alert('Uncaught Error: ' + jqXHR.responseText);
     }
-    console.log (parametros);   
-    $.ajax({
-        data:  parametros,
-        url:   'phpHotel.php',
-        type: 'POST',
-        beforeSend: function(){}, 
-	
-        error: function( jqXHR, textStatus, errorThrown ) {
-
-            if (jqXHR.status === 0) {
-    
-                alert('Not connect: Verify Network.');
-    
-            } else if (jqXHR.status == 404) {
-    
-                alert('Requested page not found [404]');
-    
-            } else if (jqXHR.status == 500) {
-    
-                alert('Internal Server Error [500].');
-    
-            } else if (textStatus === 'parsererror') {
-    
-                alert('Requested JSON parse failed.');
-    
-            } else if (textStatus === 'timeout') {
-    
-                alert('Time out error.');
-    
-            } else if (textStatus === 'abort') {
-    
-                alert('Ajax request aborted.');
-    
-            } else {
-    
-                alert('Uncaught Error: ' + jqXHR.responseText);
-    
-            }
-    
-            },
-        
-        complete: function(){},
- 
-        success:  function (val)
-            {
-               let x = JSON.parse(val);
-               console.log (val)
-               if (x.existe === '1'){
-                console.log ('ok')
-                verObraSocialCarga()
-               }else{
-                alert("error")
-                console.log ('nok')
-               }
-            } 
-    })
-
+    });
 }
 
 
-/// Usuario botón
-
-function datosPaciente (n){    
-    dni = n ;
-
+function HHab(x){
+    
     var parametros = {
-        "dniPaciente":1,
-        "dni" : dni
-    }
-    console.log (parametros);   
+        "cargaHisHab" : 1,
+        "piso" : x
+    };
+    console.log(parametros)
     $.ajax({
-        data:  parametros,
-        url:   'phpHotel.php',
-        type: 'POST',
-        beforeSend: function(){}, 
-	
-        error: function( jqXHR, textStatus, errorThrown ) {
-
-            if (jqXHR.status === 0) {
-    
-                alert('Not connect: Verify Network.');
-    
-            } else if (jqXHR.status == 404) {
-    
-                alert('Requested page not found [404]');
-    
-            } else if (jqXHR.status == 500) {
-    
-                alert('Internal Server Error [500].');
-    
-            } else if (textStatus === 'parsererror') {
-    
-                alert('Requested JSON parse failed.');
-    
-            } else if (textStatus === 'timeout') {
-    
-                alert('Time out error.');
-    
-            } else if (textStatus === 'abort') {
-    
-                alert('Ajax request aborted.');
-    
-            } else {
-    
-                alert('Uncaught Error: ' + jqXHR.responseText);
-    
-            }
-    
-            },
-        
-        complete: function(){},
-
-        success:  function (val)
-            {
-               let x = JSON.parse(val);               
-               if (x.existe == '1'){
-                console.log ('ok') 
-                $("#dni").val(x.Dni)
-                $("#nomape").val(x.NomApe)
-                $("#tel").val(x.Tel)
-               }else{
-                alert("error")
-                console.log ('nok')
-               }
-            } 
+        data: parametros,
+        url: 'procesos.php',
+        type: 'POST'
     })
+    .done(function(val) {
+        $('#tablaHabi').html(val);
+        let primerNumero = Math.abs(x).toString().substring(0, 1);
+        piso(primerNumero)
+    })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+    if (jqXHR.status === 0) {
+        alert('Not connect: Verify Network.');
+    } else if (jqXHR.status == 404) {
+        alert('Requested page not found [404]');
+    } else if (jqXHR.status == 500) {
+        alert('Internal Server Error [500].');
+    } else if (textStatus === 'parsererror') {
+        alert('Requested JSON parse failed.');
+    } else if (textStatus === 'timeout') {
+        alert('Time out error.');
+    } else if (textStatus === 'abort') {
+        alert('Ajax request aborted.');
+    } else {
+        alert('Uncaught Error: ' + jqXHR.responseText);
+    }
+    });
+} 
 
 
 
 
+function GEstadosHabOffice() {
+    var selectElement = document.getElementById("selectEstadoNeg");
+    var SEstado = selectElement.value;        
+
+
+    var span = document.getElementById("NumHab");
+    var valorSpan = span.textContent;
+      
+    ObsHab = $("#ObsHab").val();
+    var user = document.getElementById("pContent").textContent;
+    
+      var parametros = {
+          "EstadoHab" : 1,
+          "SEstado" : SEstado,
+          "valorSpan" : valorSpan,
+          "ObsHab" : ObsHab,
+          "user" : user
+      };
+    console.log(parametros)
+      $.ajax({
+          data: parametros,
+          url: 'procesos.php',
+          type: 'POST'
+      })
+      .done(function(val) {                
+          let primerNumero = Math.abs(valorSpan).toString().substring(0, 1);
+          LimpiarEstado();
+          piso(primerNumero);        
+      })
+          .fail(function(jqXHR, textStatus, errorThrown) {
+      if (jqXHR.status === 0) {
+          alert('Not connect: Verify Network.');
+      } else if (jqXHR.status == 404) {
+          alert('Requested page not found [404]');
+      } else if (jqXHR.status == 500) {
+          alert('Internal Server Error [500].');
+      } else if (textStatus === 'parsererror') {
+          alert('Requested JSON parse failed.');
+      } else if (textStatus === 'timeout') {
+          alert('Time out error.');
+      } else if (textStatus === 'abort') {
+          alert('Ajax request aborted.');
+      } else {
+          alert('Uncaught Error: ' + jqXHR.responseText);
+      }
+      });
+
+
+
+
+
+
+    
 }
