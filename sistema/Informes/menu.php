@@ -65,17 +65,20 @@
 
 <nav id="main-navbar" class="navbar sticky-top navbar-expand-lg bg-body-tertiary mb-4" data-bs-theme="dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/servicios/sistema/">Inicio</a>
+    <a class="navbar-brand" href="/servicios/sistema/index.php">Inicio</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="/servicios/sistema/Informes/Cargas/">Cargas</a>
+          <a class="nav-link" href="/servicios/sistema/Informes/Cargas/index.php" hidden>Cargas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/servicios/sistema/Informes/Ver/">Buscar</a>
+          <a class="nav-link" href="/servicios/sistema/Informes/Ver/index.php">Buscar</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link btn btn-success" target="_blank" href="https://weliiclientes.gomedisys.com/">Gomedisys</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -83,7 +86,8 @@
           </a>
           <ul class="dropdown-menu">
             
-            <li><a class="dropdown-item" href="/servicios/sistema/salir.php">Cerrar Sesion</a></li>            
+            <li><a class="dropdown-item" href="/servicios/sistema/salir.php">Cerrar Sesion</a></li>
+            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#camContra">Cambio de Contraseña</a></li>
           </ul>
         </li>
       </ul>
@@ -112,3 +116,41 @@
   // Escuchar el evento "scroll" y llamar a la función para cambiar el color del navbar
   window.addEventListener('scroll', changeNavbarColorOnScroll);
 </script>
+
+
+<!-- Modal -->
+<div class="modal fade" id="camContra" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Cambio de Contraseña</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Contraseña Actual</span>
+            <input type="password" class="form-control"  id="Actual" placeholder="Actual" aria-label="Actual" aria-describedby="basic-addon1">            
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Contraseña Nueva</span>
+            <input type="password" class="form-control"  id="Nueva" placeholder="Nueva" aria-label="Nueva" aria-describedby="basic-addon1">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Repetir Contraseña</span>
+            <input type="password" class="form-control" id="Repet" placeholder="Repet" aria-label="Repet" aria-describedby="basic-addon1">
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+

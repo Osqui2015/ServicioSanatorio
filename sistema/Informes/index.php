@@ -32,74 +32,182 @@
 
     <?php require_once 'dependencias.php' ?>
   </head>
-  <body >
+  <body onload="cTabla()">
     <?php require_once 'menu.php'?>
 
 
     <div class="container table-responsive-sm">
       <div class="card">
         <div class="card-body">    
-          <table class="table table-striped table-hover table-bordered table-sm" id="TInformes">
-            <thead>
-              <tr>
-                <th scope="col">DNI</th>
-                <th scope="col">Nombre Apellido</th>
-                <th scope="col">N° Afiliado</th>
-                <th scope="col">N° OIS</th>
-                <th scope="col">Fecha Ingreso</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php while ($fila = $Info->fetch_assoc()) { ?>
-                <tr>
-                  <th scope="row"><?php echo $fila['NDni'] ?></th>
-                  <td><?php echo $fila['NombreApellido'] ?></td>
-                  <td><?php echo $fila['NAfiliado'] ?></td>
-                  <td><?php echo $fila['NOIS'] ?></td>
-                  <td><?php echo $fila['FIngreso'] ?></td>
-                  <td>
-                    <button type="button" class="btn btn-primary" onclick="ver(<?php echo $fila['Id'] ?>)">Ver</button>
-                  </td>
-                </tr>
-              <?php } ?>  
-            </tbody>
-          </table>
+                <div class="row justify-content-center">
+                  <div class="col-md-6 text-center">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPaciente">
+                        Carga de Paciente
+                    </button>
+                  </div>
+                  <div class="col-md-2">
+                    <select class="form-select form-select-sm" aria-label="Small select example" onchange="tabEstado()" id="tEstado">
+                      <option value="3" selected>Ver Todos</option>
+                      <option value="1">Activo</option>
+                      <option value="0">Desactivado</option>
+                    </select>
+                  </div>
+                </div>
+                <br><br>
+                <!--Tabla-->
+                <div id="TablaEstados"></div>              
         </div>
       </div>
     </div> 
 
   </body>
-  <script>
-    $(document).ready(function() {
-        $("#TInformes").DataTable({
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
-            },
-                fixedHeader: {
-                header: true,
-                footer: true
-            },
-            dom: "Bfrtip",
-            buttons: [
-                        {
-                            extend: "excelHtml5",
-                            text: "Exportar a Excel",
-                            titleAttr: "Exportar a Excel",
-                            title: "Título del documento",                    
-                        },
-                        {
-                            extend: "pdfHtml5",
-                            text: "Exportar a PDF",
-                            titleAttr: "Exportar a PDF",
-                            title: "Título del documento",                    
-                        }
-            ]                        
-        });
-
-    });       
-  </script>
+ 
   <script src="funciones.js"></script>
 </html>
 
 <?php ?>
+
+
+
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+
+<div class="modal fade" id="addPaciente" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addPaciente" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Cargas de Paciente</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <?php
+            $fields = array(
+              'NIngreso' => 'N de Ingreso',
+              'NOIS' => 'OIS',
+              'FechaIngreso' => 'Fecha de Ingreso',
+              'NDni' => 'DNI',
+              'NombreApellido' => 'Apellido y Nombre',
+              'NAfiliado' => 'N° de Afiliado'
+            );
+
+            foreach ($fields as $field => $label) {
+              echo '<div class="row">';
+              echo '<label class="col-sm-4 col-form-label fst-italic fw-semibold" >' . $label . '</label>';
+              echo '<div class="col-sm-8">';
+              
+              if ($field === 'FechaIngreso') {
+                echo '<input type="date" class="form-control" name="' . $field . '" id="' . $field . '">';
+              } else if ($field === 'NAfiliado') {                
+                echo '
+                
+                        <div class="row">
+                          <div class="col-2">
+                            <input type="number" class="form-control" name="' . $field . 'uno" id="' . $field . 'uno">
+                          </div>
+                          <div class="col-1">
+                                <p class="fw-bold"> - </p>
+                          </div>
+                          <div class="col-4">
+                            <input type="number" class="form-control" name="' . $field . 'dos" id="' . $field . 'dos">
+                          </div>
+                          <div class="col-1">
+                                <p class="fw-bold"> - </p>
+                          </div>
+                          <div class="col-2">
+                            <input type="number" class="form-control" name="' . $field . 'tres" id="' . $field . 'tres">
+                          </div>
+                        </div>
+                
+                
+                ';
+              } else if ($field === 'NombreApellido') {
+                echo '<input type="text" class="form-control" name="' . $field . '" id="' . $field . '">';
+              } else {
+                echo '<input type="number" class="form-control" name="' . $field . '" id="' . $field . '">';
+              }
+              
+              echo '</div>';
+              echo '</div><br>';
+            }
+
+            $sqlSec = "SELECT * FROM sectores WHERE EstadoSec = 1";            
+            $InfoSec = mysqli_query($conServicios, $sqlSec);
+            
+            echo '<div class="row">';
+            echo '<label class="col-sm-4 col-form-label fst-italic fw-semibold"> Sector </label>';
+            echo '<div class="col-sm-8">';
+            echo '<select class="form-select form-select-sm" aria-label="Small select example" id="Habitacion" name="Habitacion"> 
+                  <option value=""></option>';
+            while ($fila = $InfoSec->fetch_assoc()) {
+                echo '<option value="' . $fila['id'] . '">' . $fila['Descripcion'] . '</option>';
+            }
+            echo '</select>';
+            echo '</div>';
+            echo '</div><br>';
+            
+          ?>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="VerificarDatos()">Guardar</button> 
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Button trigger modal -->
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="camSector" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="camSector" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="camSector">Cambio de Sector</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="form-floating mb-3">
+            <input type="number" class="form-control form-control-sm" id="camNIngreso" disabled>
+            <label for="camNIngreso">Numero Ingreso</label>
+          </div>
+
+          <?php
+
+            $sqlSecc = "SELECT * FROM sectores WHERE EstadoSec = 1";
+            $InfoSecc = mysqli_query($conServicios, $sqlSecc);
+            
+            echo '<div class="row">';
+            echo '<label class="col-sm-4 col-form-label fst-italic fw-semibold"> Sector </label>';
+            echo '<div class="col-sm-8">';
+            echo '<select class="form-select form-select-sm" aria-label="Small select example" id="Sector">
+                  <option value=""></option>';
+            while ($fila = $InfoSecc->fetch_assoc()) {
+                echo '<option value="' . $fila['id'] . '">' . $fila['Descripcion'] . '</option>';
+            }
+            echo '</select>';
+            echo '</div>';
+            echo '</div><br>';
+            
+          ?>
+
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="CamEstadoIngreso()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

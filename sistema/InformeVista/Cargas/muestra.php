@@ -17,7 +17,11 @@
         $valorParametro = intval($_GET['parametro']);
 
         // Utiliza una sentencia preparada para evitar inyección SQL
-        $sql = "SELECT * FROM informes WHERE Id = $valorParametro";
+        $sql = "SELECT * 
+                  FROM informes AS fr
+                  LEFT JOIN sectores AS sec
+                  ON fr.Habitacion = sec.id
+                  WHERE fr.Id =  $valorParametro";
 
         $query = mysqli_query($conServicios, $sql);
         if ($query) {
@@ -29,6 +33,8 @@
 
     }
 
+    $carpeta = '../../uploads/'.$row['NIngreso'];
+
     $fechaC = date('Y-m-d', strtotime($row['FIngreso']));    
 ?>
 
@@ -38,199 +44,201 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Consultas</title>
-
     <?php require_once '../dependencias.php' ?>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        ul.tree {
+            list-style-type: none;
+            padding-left: 20px;
+            border-left: 1px solid #ccc;
+        }
+
+        ul.tree li {
+            margin: 0;
+            padding: 0;
+            line-height: 1.5em;
+            position: relative;
+        }
+
+        ul.tree li.folder > span:before {
+            content: "+";
+            display: inline-block;
+            width: 1em;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        ul.tree li.folder.open > span:before {
+            content: "-";
+        }
+
+        ul.tree ul {
+            display: none;
+            list-style-type: none;
+            padding-left: 20px;
+            border-left: 1px solid #ccc;
+        }
+
+        ul.tree li.file {
+            margin-left: 20px;
+            padding-left: 0;
+            list-style-type: none;
+            position: relative;
+        }
+
+        ul.tree li.file:before {
+            content: "\f15b";
+            font-family: FontAwesome;
+            display: inline-block;
+            width: 1em;
+            margin-left: -20px;
+            margin-right: 5px;
+            color: #888;
+        } 
+        .card-body .row {
+    margin-bottom: -18px !important; /* Ajusta el valor según tus preferencias */
+  }
+        .fixed-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            z-index: 1;
+        }
+    </style>
   </head>
-  <body >
+ 
+  <body onload="carpeta()" >
     <?php require_once '../menu.php'?>
 
     <input  disabled readonly type="number" name="nID" id="nID" value="<?php echo $row['Id'] ?>" hidden>
     
-      <div class="container text-center">
+      <div class="">
 
-        <fieldset>
-          <legend class="fs-2 text-white fw-semibold">Información de Ingreso</legend>
-          <div class="row align-items-center">
-            <div class="col-4">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="nIngreso">N de Ingreso</label>
-                <input  disabled readonly type="number" id="nIngreso" class="form-control" aria-describedby="basic-addon1" value="<?php echo $row['NIngreso'] ?>"  required>
-              </div>
+
+      <input type="number" name="nIngreso" id="nIngreso" value="<?php echo $row['NIngreso']  ?>" hidden>
+
+      <div class="card">
+        <div class="card-body border border-black">
+          <div class="row">
+            <div class="col-md-6"> <!-- División de la primera columna -->
+              <?php
+                $fields = array(
+                  'NIngreso' => 'N de Ingreso',
+                  'NOIS' => 'OIS',
+                  'FechaIngreso' => 'Fecha de Ingreso',
+                  'NDni' => 'DNI'
+                );
+
+                foreach ($fields as $field => $label) {
+                  echo '<div class="row">';
+                  echo '<label class="col-sm-4 col-form-label fst-italic fw-semibold text-start">' . $label . '</label>';
+                  echo '<div class="col-sm-6">';
+                  echo '<input type="text" readonly class="form-control-plaintext" value="' . ($field === 'FechaIngreso' ? $fechaC : $row[$field]) . '">';
+                  echo '</div>';
+                  echo '</div>';
+                }
+              ?>
             </div>
-            <div class="col-4">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="nOIS">OIS</label>
-                <input  disabled readonly type="number" id="nOIS" class="form-control" aria-describedby="basic-addon1" value="<?php echo $row['NOIS'] ?>"  required>
-              </div>
-            </div>
-            <div class="col-4">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="fechaIngreso">Fecha de Ingreso</label>
-                <input  disabled readonly type="date" id="fechaIngreso" class="form-control" aria-describedby="basic-addon1" value="<?php echo $fechaC ?>"  required>
-              </div>
+            <div class="col-md-6"> <!-- División de la segunda columna -->
+              <?php
+                $fields = array(
+                  'NombreApellido' => 'Nombre y Apellido',
+                  'NAfiliado' => 'N° de Afiliado',
+                  'Descripcion' => 'Sector'
+                );
+
+                foreach ($fields as $field => $label) {
+                  echo '<div class="row">';
+                  echo '<label class="col-sm-4 col-form-label fst-italic fw-semibold text-start">' . $label . '</label>';
+                  echo '<div class="col-sm-6">';
+                  echo '<input type="text" readonly class="form-control-plaintext" value="' . $row[$field] . '">';
+                  echo '</div>';
+                  echo '</div>';
+                }
+              ?>
             </div>
           </div>
-        </fieldset>
-
-        <fieldset>
-          <legend class="fs-3 text-white fw-semibold">Información Personal</legend>
-          <div class="row justify-content-start">
-            <div class="col-md-4">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="dni">DNI</label>
-                <input  disabled readonly type="number" id="dni" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="<?php echo $row['NDni'] ?>"  required>
-              </div>            
-            </div>
-            <div class="col-md-8">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="nombreApellido">Nombre y Apellido</label>
-                <input  disabled readonly type="text" id="nombreApellido" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="<?php echo $row['NombreApellido'] ?>"  required>
-              </div>
-            </div>
-          </div>
-
-          <div class="row justify-content-start">
-            <div class="col-md-4">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="numAfiliado">N° de Afiliado</label>
-                <input  disabled readonly type="number" id="numAfiliado" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="<?php echo $row['NAfiliado'] ?>"  required>
-              </div>            
-            </div>
-            <div class="col-md-4">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="habitacion">Habitación</label>
-                <input  disabled readonly type="number" id="habitacion" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="<?php echo $row['Habitacion'] ?>"  required>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <input type="number" name="nEstado" id="nEstado" value="<?php echo $row['Estado'] ?>" hidden>
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="estado">Estado</label>
-                <select id="estado" class="form-select" aria-label="Default select example" disabled readonly>
-                  <option value="1">Activo</option>
-                  <option value="2">Desactivado</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <button hidden type="button" class="btn btn-light" onclick="Gestado(<?php echo $row['Id'] ?>)">Guardar Estado</button>
-        </fieldset>
-
-        <fieldset hidden>
-          <legend class="fs-3 text-white fw-semibold">Archivos Adjuntos</legend>
-          <input  disabled readonly type="number" name="n" id="n" value="<?php echo $row['Id'] ?>" hidden>
           <br>
-            <div class="col-md-8">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="fechaIngreso">Fecha</label>
-                <input type="date" id="fechaC" class="form-control" aria-describedby="basic-addon1" required>
-              </div>
-            </div>
-            <div class="col-md-8">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="historiaClinica">Historia Clínica</label>
-                <input  type="file" id="historiaClinica" class="form-control" accept=".pdf, .doc, .docx">
-              </div>
-            </div>
-            <div class="col-md-8">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="evolucion">Evolución</label>
-                <input  type="file" id="evolucion" class="form-control" accept=".pdf, .doc, .docx">
-              </div>
-            </div>
-            <div class="col-md-8">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="apoyoDiagnostico">Apoyo Diagnóstico</label>
-                <input  type="file" id="apoyoDiagnostico" class="form-control" accept=".pdf, .doc, .docx">
-              </div>
-            </div>
-            <div class="col-md-8">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="interconsulta">Interconsulta</label>
-                <input  type="file" id="interconsulta" class="form-control" accept=".pdf, .doc, .docx">
-              </div>
-            </div>
-            <button type="button" class="btn btn-primary" onclick="CDatos()">Cargar Datos </button>
-        </fieldset>
+        </div>
+      </div>
 
-        
+      <div class="container">
+          <button class="fixed-button btn btn-dark" data-bs-toggle="modal" data-bs-target="#verComentarios" onclick="verComentario()">Comentarios</button>
+      </div>
+
+
+
+        <input type="text" name="" id="carpeta" value="<?php echo $carpeta ?>" hidden>
 
 
       </div>
 
       <br>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-4">
-                <fieldset>
-                    <div class="container mt-4">
-                        <ul class="list-group" id="file-list">
-                            <!-- Aquí se agregará la salida generada por PHP -->
-                            <?php
-                            function displayFiles($basePath) {
-                                $files = scandir($basePath);
-                                foreach ($files as $fileName) {
-                                    if ($fileName !== '.' && $fileName !== '..') {
-                                        $filePath = $basePath . '/' . $fileName;
-                                        echo '<li class="list-group-item mb-3">';
-                                        if (is_dir($filePath)) {
-                                            echo '<button type="button" class="btn folder-btn">' . $fileName . '</button>';
-                                            echo '<ul class="list-group sublist" style="display: none;">';
-                                            displayFiles($filePath);
-                                            echo '</ul>';
-                                        } else {
-                                            echo '<div class="d-flex justify-content-between align-items-center">';                                            
-                                            if (strtolower(pathinfo($fileName, PATHINFO_EXTENSION)) === 'pdf') {
-                                                echo '<a href="#" class="view-pdf-link" data-bs-toggle="modal" data-bs-target="#pdfModal" data-url="' . $filePath . '">' . $fileName . '</a>';
-                                            }
-                                            echo '</div>';
-                                        }
-                                        echo '</li>';
-                                    }
-                                }
-                            }                            
-                            $documentosPath = '../../uploads/'.$valorParametro.'/';
-                            displayFiles($documentosPath);
-                            ?>
-                        </ul>
-                    </div>
-                </fieldset>
-            </div>
-            <div class="col-md-8">
-                <div class="pdf-container">
-                    <iframe id="pdf-viewer" src="" width="100%" height="550" frameborder="0"></iframe>
-                </div>
-            </div>
-        </div>
-    </div>  
+      
+    
+
+<div class="">
+  <div class="row">
+    <div class="col-sm-3  mb-sm-0">
+      <div id="file-tree">
+        <!-- Aquí se cargará el árbol de archivos -->
+      </div>
+    </div>
+    <div class="col-sm-9">
+      <div id="pdf-viewer">            
+        <iframe id="pdf-iframe" style="width: 102%; height: 700px;"></iframe>
+          <!-- Cambia 'height' a la altura deseada, por ejemplo, '800px' -->
+      </div>
+    </div>
+  </div>
+</div>
+
     
   </body>
-
-  <script>
-      document.addEventListener('DOMContentLoaded', function () {
-          const viewPdfLinks = document.querySelectorAll('.view-pdf-link');
-          const pdfViewer = document.getElementById('pdf-viewer');
-
-          viewPdfLinks.forEach(link => {
-              link.addEventListener('click', function (event) {
-                  event.preventDefault();
-                  const pdfUrl = this.getAttribute('data-url');
-                  pdfViewer.setAttribute('src', pdfUrl);
-              });
-          });
-
-          document.querySelectorAll('.folder-btn').forEach(folder => {
-              folder.addEventListener('click', () => {
-                  const sublist = folder.nextElementSibling;
-                  sublist.style.display = sublist.style.display === 'none' ? 'block' : 'none';
-              });
-          });
-      });
-  </script>
-  
   <script src="funciones/funciones.js"></script>
 </html>
 
 <?php ?> 
+
+<!-- Modal -->
+<div class="modal fade" id="verComentarios" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Comentarios</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+
+            <div class="input-group">
+              <span class="input-group-text">Comentarios</span>
+              <textarea class="form-control" aria-label="With textarea" id="cComentario"></textarea>
+              <button class="btn btn-outline-secondary" type="button" id="btnComentario" onclick="addComentarios()">Guardar</button>
+            </div>              
+            <!-- Lista con los comentarios del usuario-->            
+            <br>
+            <div id="verTablaCom"></div>
+            <p></p>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" hidden>Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

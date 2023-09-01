@@ -1,96 +1,103 @@
-function CDatos() {
-    var nIngreso = $("#nIngreso").val();
-    var fechaC = $("#fechaC").val();
+function carpeta (){
+    console.log ('entre')
+    var nIngreso = $("#carpeta").val();
+    console.log(nIngreso)
+    console.log (nIngreso)
+        // Cargar el árbol de archivos al cargar la página
+        loadFileTree(nIngreso);
 
-    var n = parseInt($("#n").val()) || 0;
-
-
-    var formData = new FormData();
-
-    formData.append('nIngreso', nIngreso);
-    formData.append('fechaC', fechaC);
-
-    // Append each file input to the formData
-    $('input[type="file"]').each(function() {
-        formData.append($(this).attr('id'), $(this)[0].files[0]);
-    });
-
-    $.ajax({
-        url: '/servicios/sistema/Informes/Cargas/pro/pro.php',
-        type: 'POST',
-        data: formData,
-        contentType: false,
-        processData: false,
-        success: function(response) {
-            alert(response);
-
-            if (n !== 0) {
-                $(location).attr('href', '/servicios/sistema/Informes/Cargas/muestra.php?parametro=' + encodeURIComponent(n));
-            }else{
-                $(location).attr('href', '/servicios/sistema/Informes/Cargas/');
-            }            
-            
+        // Función para cargar el árbol de archivos
+        function loadFileTree(folder) {
+            $.ajax({
+                url: 'get_tree.php',
+                type: 'POST',
+                data: { folder: folder },
+                success: function(data) {
+                    $('#file-tree').html(data);
+                }
+            });
         }
-    });
-} 
+        // Manejar clics en botones de carpeta para expandir/contraer
+        $(document).on('click', 'li.folder > span', function() {
+            $(this).parent().toggleClass('open');
+            $(this).siblings('ul').slideToggle();
+        });
 
-function CargarDatos() {
+        // Manejar clics en archivos PDF
+        $(document).on('click', 'li.file.pdf > a', function(e) {
+            e.preventDefault();
+            var filePath = $(this).attr('href');
+            showPDF(filePath);
+        });
+
+        function showPDF(filePath) {
+            $('#pdf-iframe').attr('src', filePath);
+            $('#pdf-viewer').css('display', 'block');
+        }
+
+        // Cerrar el visor de PDF
+        $(document).on('click', '#close-pdf', function() {
+            $('#pdf-viewer').css('display', 'none');
+        });    
+}
+
+function addComentarios(){
+    var cComentario = $('#cComentario').val();
     var nIngreso = $("#nIngreso").val();
-    var nOIS = $("#nOIS").val();
-    var fechaIngreso = $("#fechaIngreso").val();
-    var dni = $("#dni").val();
-    var nombreApellido = $("#nombreApellido").val();
-    var numAfiliado = $("#numAfiliado").val();
-    var habitacion = $("#habitacion").val();
-    var estado = $("#estado").val();
-
     var Usuario = document.querySelector('.navbar-text').textContent.trim();
 
-
-
-    // Verificar si algún campo está vacío
-    if (nIngreso === '' || nOIS === '' || fechaIngreso === '' || dni === '' || nombreApellido === '' || numAfiliado === '' || habitacion === '') {
-        alert("Por favor, complete todos los campos obligatorios.");
-        return;
-    }
-
-    var formData = {
+    console.log(cComentario)
+    console.log(nIngreso)
+    var parametros = {
+        cComentario: cComentario,
         nIngreso: nIngreso,
-        nOIS: nOIS,
-        fechaIngreso: fechaIngreso,
-        dni: dni,
-        nombreApellido: nombreApellido,
-        numAfiliado: numAfiliado,
-        habitacion: habitacion,
-        estado: estado,
-        Usuario : Usuario
-    };
-
+        Usuario:Usuario,
+        addC:1
+    }
     $.ajax({
         type: "POST",
-        url: "/servicios/sistema/Informes/Cargas/pro/guardar_datos.php",
-        data: formData,
-        success: function(response) {
-            alert(response); // Muestra la respuesta del servidor
-            CDatos()
+        url: "/servicios/sistema/InformeVista/Cargas/pro/mdatos.php",
+        data: parametros,
+        success: function(response) {                   
+            $('#cComentario').val(' ');
+            verComentario()
         }
     });
 }
 
-function Gestado(){
-    var idEstado = $('#idEstado').val();
+function verComentario(){
     var nIngreso = $("#nIngreso").val();
-    var parametros = {
-        nIngreso: nIngreso,
-        idEstado: idEstado,
-        mEstado:1
+    var parametros = {        
+        nIngreso: nIngreso,        
+        verC:1
     }
     $.ajax({
         type: "POST",
-        url: "/servicios/sistema/Informes/Cargas/pro/guardar_datos.php",
+        url: "/servicios/sistema/InformeVista/Cargas/pro/mdatos.php",
         data: parametros,
-        success: function(response) {
-            alert(response); // Muestra la respuesta del servidor            
+        beforeSend: function () {},
+        error: function (jqXHR, textStatus, errorThrown) {
+            var errorMessage = '';
+            if (jqXHR.status === 0) {
+                errorMessage = 'No hay conexión: Verifica tu red.';
+            } else if (jqXHR.status == 404) {
+                errorMessage = 'Página solicitada no encontrada [404]';
+            } else if (jqXHR.status == 500) {
+                errorMessage = 'Error interno del servidor [500].';
+            } else if (textStatus === 'parsererror') {
+                errorMessage = 'Error al analizar JSON solicitado.';
+            } else if (textStatus === 'timeout') {
+                errorMessage = 'Error de tiempo de espera.';
+            } else if (textStatus === 'abort') {
+                errorMessage = 'Solicitud Ajax cancelada.';
+            } else {
+                errorMessage = 'Error no capturado: ' + jqXHR.responseText;
+            }
+            alert(errorMessage);
+        },
+        complete: function () {},
+        success: function (val) {                      
+            $('#verTablaCom').html(val);
         }
     });
 }

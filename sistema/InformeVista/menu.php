@@ -1,96 +1,23 @@
 
 <style>
-    body, html {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-    }
-
-    body {
-        height: 100%;
-        background-image:  url("../../img/hero.png"),linear-gradient(to bottom, #0C5195, #0584AB);
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-    }
-
-    .navbar {
-      background-color: transparent !important;
-    }
-
-    /* Ajustar el estilo del texto de la marca y los enlaces para resaltar y ser legibles */
-    .navbar-brand,
-    .navbar-nav .nav-link,
-    .navbar-text,
-    .navbar-nav .dropdown-item {
-      font-family: 'Roboto', sans-serif; /* Aplicar la tipografía Roboto */
-        color: white;
-        font-weight: bold;
-        text-shadow: 4px 2px 3px rgba(0, 0, 0, 0.5);
-        font-size: 20px;
-        transition: all 0.2s ease-in-out;
-    }
-
-    /* Estilo para el texto del perfil */
-    .navbar-text {
-        margin-left: auto; /* Alinea el texto del perfil a la derecha del navbar */
-    }
-
-    /* Cambiar el estilo del enlace activo */
-    .navbar-nav .nav-link.active {
-        background-color: rgba(255, 255, 255, 0.1); /* Agrega un fondo semi-transparente al enlace activo */
-        border-radius: 5px; /* Agrega bordes redondeados al enlace activo */
-    }
-
-    /* Estilo para el dropdown */
-    .navbar-nav .dropdown-menu {
-        background-color: #0C5195; /* Fondo del dropdown */
-    }
-
-    .navbar-nav .dropdown-item {
-        color: white; /* Color de letra del dropdown */
-    }
-
-    .navbar-scrolled {
-      background-color: #0C5195 !important;
-    }
-    .btn-primary {
-    background-color: #0C5195 !important;
-  }
-  label, span {
-    font-weight: 600 !important; /* O 700 según tus preferencias */
-    font-size: 16px; /* Puedes ajustar este valor según tus preferencias */
-  }
-
-  /* Estilos para el pie de página */
-footer {
-    position: relative;
-}
-
-/* Estilos para la imagen en el pie de página */
-footer img {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 150px; /* Ajusta el tamaño de la imagen según tus necesidades */
-}
-
 
 </style>
 
-<nav id="main-navbar" class="navbar sticky-top navbar-expand-lg bg-body-tertiary mb-4" data-bs-theme="dark">
+<nav id="main-navbar" class="navbar sticky-top navbar-expand-lg bg-body-tertiary mb-4" style="background-color: white !important;">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/servicios/sistema/">Inicio</a>
+      <a class="navbar-brand" href="/servicios/sistema/index.php">
+          <img src="imgdos.jpeg" alt="Logo" width="170" height="70">            
+      </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
-        <li class="nav-item" hidden>
-          <a class="nav-link" href="/servicios/sistema/Informes/Cargas/">Cargas</a>
+        <li class="nav-item">
+          <a class="nav-link" href="/servicios/sistema/index.php">Inicio</a>
         </li>
         <li class="nav-item" hidden>
-          <a class="nav-link" href="/servicios/sistema/Informes/Ver/">Buscar</a>
+          <a class="nav-link" href="/servicios/sistema/index.php">Buscar</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -98,7 +25,8 @@ footer img {
           </a>
           <ul class="dropdown-menu">
             
-            <li><a class="dropdown-item" href="/servicios/sistema/salir.php">Cerrar Sesion</a></li>            
+            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#camContra">Cambiar de Contraseña</a></li>
+            <li><a class="dropdown-item" href="/servicios/sistema/salir.php">Cerrar Sesion</a></li>
           </ul>
         </li>
       </ul>
@@ -108,6 +36,51 @@ footer img {
     </span>
   </div>
 </nav>
+
+
+<!-- Modal -->
+<div class="modal fade" id="camContra" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Cambio de Contraseña</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+            <input type="number" name="idUsuario" id="idUsuario" value="<?php echo $_SESSION['usuario'] ?>" hidden>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Contraseña Actual</span>
+                <input type="password" class="form-control" id="Actual" placeholder="Actual" aria-label="Actual" aria-describedby="basic-addon1" autocomplete="current-password">
+            </div>
+
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Contraseña Nueva</span>
+                <input type="password" class="form-control" id="Nueva" placeholder="Nueva" aria-label="Nueva" aria-describedby="basic-addon1" autocomplete="new-password">
+            </div>
+
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Repetir Contraseña</span>
+                <input type="password" class="form-control" id="Repet" placeholder="Repetir" aria-label="Repetir" aria-describedby="basic-addon1" autocomplete="new-password">
+            </div>
+        </div>
+
+        
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="guardarBtn">Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
 
 
 <script>
@@ -126,4 +99,41 @@ footer img {
 
   // Escuchar el evento "scroll" y llamar a la función para cambiar el color del navbar
   window.addEventListener('scroll', changeNavbarColorOnScroll);
+
+  $(document).ready(function() {
+    $("#guardarBtn").click(function() {
+        var actual = $("#Actual").val();
+        var nueva = $("#Nueva").val();
+        var repetir = $("#Repet").val();
+        var idUsuario = $("#idUsuario").val();
+
+        // Verificar si algún campo está vacío
+        if (actual === '' || nueva === '' || repetir === '') {
+            alert("Por favor, complete todos los campos.");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "cambiar_contra.php",
+            data: { actual: actual, nueva: nueva, repetir: repetir, idUsuario: idUsuario },
+            dataType: "json",
+            success: function(data) {
+                if (data.success) {
+                    alert(data.message);
+                    // Actualizar la página o redirigir después de un cambio exitoso de contraseña
+                    $(location).attr('href', '/servicios/sistema/salir.php');
+                } else {
+                    alert(data.message);                    
+                }
+            },
+            error: function() {
+                alert("Ha ocurrido un error en la solicitud.");
+            }
+        });
+    });
+});
+
+
+
 </script>

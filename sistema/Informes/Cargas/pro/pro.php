@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fechaC = date('d-m-Y', strtotime($_POST['fechaC']));
 
     echo $fechaC;
-   
+    
 
     foreach ($_FILES as $fieldName => $fileData) {
 

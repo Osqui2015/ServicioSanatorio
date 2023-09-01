@@ -7,6 +7,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fechaIngreso = $_POST["fechaIngreso"];
     $dni = $_POST["dni"];
     $nombreApellido = $_POST["nombreApellido"];
+
+    $textEnMayusculas = strtoupper($nombreApellido);
+
     $numAfiliado = $_POST["numAfiliado"];
     $habitacion = $_POST["habitacion"];
     $estado = $_POST["estado"];
@@ -15,14 +18,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     $sql = "INSERT INTO informes (NIngreso, NDni, NOIS, NombreApellido, NAfiliado, Habitacion, Estado, FIngreso, Fecha, Usuario)
-            VALUES ($nIngreso, $dni, $nOIS, '$nombreApellido', $numAfiliado, $habitacion, $estado, '$fechaIngreso', '$fechaHoraActual','$Usuario')";
+            VALUES ($nIngreso, $dni, $nOIS, '$textEnMayusculas', $numAfiliado, $habitacion, $estado, '$fechaIngreso', '$fechaHoraActual','$Usuario')";
 
     if ($conServicios->query($sql) === TRUE) {
         echo "Datos insertados correctamente";
     } else {
         echo "Error: " . $sql . "<br>" . $conServicios->error;
     }
-}
+} 
 
 $conServicios->close();
 ?>

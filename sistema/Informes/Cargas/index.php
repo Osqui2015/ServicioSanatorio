@@ -18,13 +18,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Consultas</title>
-
+  <style>
+    .card-body .row {
+        margin-bottom: -5px;
+    }
+  </style>
     <?php require_once '../dependencias.php' ?>
   </head>
   <body >
     <?php require_once '../menu.php'?>
     
-      <div class="container text-center">
+      <div class="container">
 
         <fieldset>
           <legend class="fs-2 text-white fw-semibold">Información de Ingreso</legend>
@@ -92,43 +96,238 @@
           </div>
         </fieldset>
 
+
         <fieldset>
-          <legend class="fs-3 text-white fw-semibold">Archivos Adjuntos</legend>
-          <br>
-            <div class="col-md-8">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="fechaIngreso">Fecha</label>
-                <input type="date" id="fechaC" class="form-control" aria-describedby="basic-addon1" required>
-              </div>
+          <div class="card">
+            <div class="card-body">
+                <div class="row justify-content-center">
+                  <div class="col-md-4">
+                    <div class="input-group mb-3">
+                      <label class="input-group-text" for="fechaCarga">Fecha de Carga</label>
+                      <input type="date" id="fechaCarga" class="form-control" aria-describedby="basic-addon1" required>
+                    </div>
+                  </div>
+                </div>
+            <br>                
+              <form enctype="multipart/form-data">
+                <!-- Guardia -->
+                  <div>
+                    <div class="row justify-content-start">
+                      <div class="col-2">
+                        <p class="font-monospace fw-semibold">Guardia</p>
+                      </div>    
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">Evolucion</p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="Evolucion" type="file" accept=".pdf">
+                      </div>
+                    </div>              
+                  </div>
+                  <br>
+                <!-- Cirugia -->
+                  <div>
+                    <div class="row justify-content-start">
+                      <div class="col-2">
+                        <p class="font-monospace fw-semibold">Cirugia</p>
+                      </div>    
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">Protocolo Quirurgico</p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="Quirurgico" type="file" accept=".pdf">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">Protocolo Anestesico</p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="Anestesico" type="file" accept=".pdf">
+                      </div>
+                    </div>                
+                  </div>
+                  <br>
+                <!-- Internacion -->
+                  <div>
+                    <div class="row justify-content-start">
+                      <div class="col-2">
+                        <p class="font-monospace fw-semibold">Internacion</p>
+                      </div>    
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">Piso</p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="Piso" type="file" accept=".pdf">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">UTI</p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="UTI" type="file" accept=".pdf">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">UCO</p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="UCO" type="file" accept=".pdf">
+                      </div>
+                    </div> 
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">NEO</p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="NEO" type="file" accept=".pdf">
+                      </div>
+                    </div> 
+                  </div>
+                  <br>
+                <!-- Enfermeria -->
+                  <div>
+                    <div class="row justify-content-start">
+                      <div class="col-2">
+                        <p class="font-monospace fw-semibold">Enfermeria</p>
+                      </div>    
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">Hoja Enfermeria </p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="HEnfermeria" type="file" accept=".pdf">
+                      </div>
+                    </div>              
+                  </div>
+                  <br>
+                <!-- Indicaciones  -->
+                  <div>
+                    <div class="row justify-content-start">
+                      <div class="col-2">
+                        <p class="font-monospace fw-semibold">Indicaciones</p>
+                      </div>    
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">Procedimientos </p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="Procedimientos" type="file" accept=".pdf">
+                      </div>
+                    </div>              
+                  </div>
+                  <br>
+                <!-- Interconsultas  Apoyo Diagnostico-->
+                  <div>
+                    <div class="row justify-content-start">
+                      <div class="col-2">
+                        <p class="font-monospace fw-semibold">Apoyo Diagnostico</p>
+                      </div>    
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">Laboratorio </p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="Laboratorio" type="file" accept=".pdf">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">Ecografia </p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="Ecografia" type="file" accept=".pdf">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">Radiologia </p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="Radiologia" type="file" accept=".pdf">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">Tomografia </p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="Tomografia" type="file" accept=".pdf">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">Otros </p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="Otros" type="file" accept=".pdf">
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                <!-- Interconsultas  Apoyo Terapeutico-->
+                  <div>
+                    <div class="row justify-content-start">
+                      <div class="col-2">
+                        <p class="font-monospace fw-semibold">Apoyo Terapeutico</p>
+                      </div>    
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">Kinesiologia </p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="Kinesiologia" type="file" accept=".pdf">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">Fonoaudiologia </p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="Fonoaudiologia" type="file" accept=".pdf">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">Hemoterapia </p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="Hemoterapia" type="file" accept=".pdf">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <p class="font-monospace fw-semibold mx-4">Otros </p>
+                      </div>
+                      <div class="col-6">
+                        <input class="form-control form-control-sm" id="OtrosDos" type="file" accept=".pdf">
+                      </div>
+                    </div>
+                  </div>
+              </form>
+
+                <div class="row justify-content-center">
+                  <div class="col-md-4">
+                    <button type="button" class="btn btn-primary" onclick="CargarDatos()">Cargar Datos </button>
+                  </div>
+                </div>
             </div>
-            <div class="col-md-8">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="historiaClinica">Historia Clínica</label>
-                <input type="file" id="historiaClinica" class="form-control" accept=".pdf, .doc, .docx">
-              </div>
-            </div>
-            <div class="col-md-8">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="evolucion">Evolución</label>
-                <input type="file" id="evolucion" class="form-control" accept=".pdf, .doc, .docx">
-              </div>
-            </div>
-            <div class="col-md-8">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="apoyoDiagnostico">Apoyo Diagnóstico</label>
-                <input type="file" id="apoyoDiagnostico" class="form-control" accept=".pdf, .doc, .docx">
-              </div>
-            </div>
-            <div class="col-md-8">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="interconsulta">Interconsulta</label>
-                <input type="file" id="interconsulta" class="form-control" accept=".pdf, .doc, .docx">
-              </div>
-            </div>
-          
+          </div>          
         </fieldset>
 
-        <button type="button" class="btn btn-primary" onclick="CargarDatos()">Cargar Datos </button>
+        
 
       </div>
 
